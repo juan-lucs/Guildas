@@ -1,4 +1,4 @@
-package Main;
+https://github.com/juan-lucs/Sistema-de-Gerenciamento-de-Torneios.gitpackage Main;
 import Service.*;
 
 import Model.*;
