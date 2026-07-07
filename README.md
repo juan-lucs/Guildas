@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Tournament Management System
 
 ![Java](https://img.shields.io/badge/Java-17%2B-blue?style=flat-square&logo=openjdk)
