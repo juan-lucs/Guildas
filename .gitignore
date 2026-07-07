@@ -1,0 +1,23 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Compilação Java / IntelliJ
+out/
+*.class
+
+# Build tools, caso use Maven ou Gradle depois
+target/
+build/
+.gradle/
+
+# Logs
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários
+*.tmp
+*.temp
