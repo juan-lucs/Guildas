@@ -81,7 +81,7 @@ public class ProgramMain {
                     System.out.print("Idade do jogador: ");
                     try {
                         int idade = Integer.parseInt(sc.nextLine().trim());
-                        Jogador jogador = new Jogador(nomeJogador, posicao, idade);
+                        Jogador jogador = new Jogador(posicao, nomeJogador, idade);
                         service.adicionarJogadorTime(nomeTime, jogador);
                     } catch (TimeNaoEncontradoException | JogadorDuplicadoException | TorneioFinalizadoException e) {
                         System.out.println(e.getMessage());
