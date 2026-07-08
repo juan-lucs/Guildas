@@ -1,11 +1,11 @@
 package Service;
 
 import Interfaces.*;
+import enums.StatusTorneio;
 import Model.*;
 import enums.*;
 import exeption.*;
 import repository.*;
-import util.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -15,9 +15,11 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
     private Map<Time, Integer> pontosDeCadaTime = new HashMap<>();
     private Repositorio<Time> repositorio = new Repositorio<>();
     private Set<Partida> partidas = new HashSet<>();
+    private StatusTorneio status = StatusTorneio.ABERTO;
 
     // CADASTRAR TIME
-    public void cadastrarTime(String nomeTime, Modalidade modalidade) throws TimeDuplicadoException {
+    public void cadastrarTime(String nomeTime, Modalidade modalidade) throws TimeDuplicadoException, TorneioFinalizadoException {
+        verificarTorneioAberto();
         for (Time t : repositorio.listarTodos()) {
             if (t.getNome().equalsIgnoreCase(nomeTime)) {
                 throw new TimeDuplicadoException("Já existe um time com o nome '" + nomeTime + "'!");
@@ -30,16 +32,23 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
     }
 
     // ADICIONAR JOGADOR AO TIME
-    public void adicionarJogadorTime(String nometime, Jogador jogador) throws TimeNaoEncontradoException, JogadorDuplicadoException {
+    public void adicionarJogadorTime(String nometime, Jogador jogador) throws TimeNaoEncontradoException, JogadorDuplicadoException, TorneioFinalizadoException {
+        verificarTorneioAberto();
         Time time = buscarTimePorNome(nometime);
-        time.setJogador(jogador); // Time.setJogador já lança JogadorDuplicadoException se repetir
+
+        if (time.getJogadores().contains(jogador)) {
+            throw new JogadorDuplicadoException("O jogador '" + jogador.getNome() + "' já está cadastrado no time '" + time.getNome() + "'!");
+        }
+
+        time.setJogador(jogador);
         System.out.println("Jogador '" + jogador.getNome() + "' adicionado ao time '" + time.getNome() + "' com sucesso!");
     }
 
     // REGISTRAR PARTIDA
     public void registrarPartida(String time1, String time2, LocalDate dataPartida, int pntstime1, int pntstime2)
-            throws TimeNaoEncontradoException, TimeIncompletoException {
+            throws TimeNaoEncontradoException, TimeIncompletoException, TorneioFinalizadoException {
 
+        verificarTorneioAberto();
         Time t1 = buscarTimePorNome(time1);
         Time t2 = buscarTimePorNome(time2);
 
@@ -70,6 +79,16 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         System.out.println("Partidas jogadas:   " + partidas.size());
     }
 
+    // FINALIZAR TORNEIO
+    public void finalizarTorneio() throws TorneioFinalizadoException {
+        verificarTorneioAberto();
+        status = StatusTorneio.FINALIZADO;
+        System.out.println("Torneio finalizado com sucesso! Não é mais possível cadastrar times, jogadores ou partidas.");
+    }
+
+    public StatusTorneio getStatus() {
+        return status;
+    }
 
     // MÉTODO GENÉRICO DELIMITADO
     public <T extends Jogador> void exibirJogadores(List<T> jogadores) {
@@ -95,12 +114,17 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         throw new TimeNaoEncontradoException("Time '" + nome + "' não encontrado!");
     }
 
+    // HELPER PRIVADO
+    private void verificarTorneioAberto() throws TorneioFinalizadoException {
+        if (status == StatusTorneio.FINALIZADO) {
+            throw new TorneioFinalizadoException("Esta ação não é permitida: o torneio já foi finalizado!");
+        }
+    }
+
     // GETTERS ÚTEIS
     public List<Time> getTimes() {
         return repositorio.listarTodos();
     }
-
-
 
     // INTERFACES
     @Override

@@ -60,7 +60,7 @@ public class ProgramMain {
                         int idxModalidade = Integer.parseInt(sc.nextLine().trim()) - 1;
                         Modalidade modalidade = modalidades[idxModalidade];
                         service.cadastrarTime(nomeTime, modalidade);
-                    } catch (TimeDuplicadoException e) {
+                    } catch (TimeDuplicadoException | TorneioFinalizadoException e) {
                         System.out.println(e.getMessage());
                     } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
                         System.out.println("Modalidade inválida!");
@@ -83,7 +83,7 @@ public class ProgramMain {
                         int idade = Integer.parseInt(sc.nextLine().trim());
                         Jogador jogador = new Jogador(nomeJogador, posicao, idade);
                         service.adicionarJogadorTime(nomeTime, jogador);
-                    } catch (TimeNaoEncontradoException | JogadorDuplicadoException e) {
+                    } catch (TimeNaoEncontradoException | JogadorDuplicadoException | TorneioFinalizadoException e) {
                         System.out.println(e.getMessage());
                     } catch (NumberFormatException e) {
                         System.out.println(" Idade inválida!");
@@ -115,7 +115,7 @@ public class ProgramMain {
 
                         service.registrarPartida(time1, time2, data, pontos1, pontos2);
 
-                    } catch (TimeNaoEncontradoException | TimeIncompletoException e) {
+                    } catch (TimeNaoEncontradoException | TimeIncompletoException | TorneioFinalizadoException e) {
                         System.out.println(e.getMessage());
                     } catch (NumberFormatException e) {
                         System.out.println("Valor inválido!");
