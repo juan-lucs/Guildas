@@ -156,6 +156,15 @@ public class ProgramMain {
                     }
                 }
 
+                case 7 -> {
+                    // FINALIZAR
+                    try {
+                        service.finalizarTorneio();
+                    } catch (TorneioFinalizadoException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+
 
                 case 0 -> {
                     System.out.println("Encerrando o sistema.....");
