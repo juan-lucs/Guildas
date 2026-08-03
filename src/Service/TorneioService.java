@@ -13,7 +13,7 @@ import java.util.*;
 public class TorneioService implements Exportavel, Classificavel, Estatistico {
 
     private Map<Time, Integer> pontosDeCadaTime = new HashMap<>();
-    private Repositorio<Time> repositorio = new Repositorio<>();
+    private final Repositorio<Time> repositorio = new Repositorio<>();
     private Set<Partida> partidas = new HashSet<>();
     private StatusTorneio status = StatusTorneio.ABERTO;
 

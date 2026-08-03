@@ -24,6 +24,16 @@ public class bancodados {
         return conn;
     }
 
+    private static Properties loadProperties() {
+        try(var fs = new FileInputStream("src/db.properties")) { // abre o arquivo de properties, FS VAI REPRESENTAR O ARQUIVO (db.properties) ABERTO
+            var props = new Properties(); // CRIANDO UM OBJETO VAZIO
+            props.load(fs); //basicamente o objeto props pede para o FS ler os arquivos (de db.properties), e depois o props interpreta isso como propriedades do banco (.load). assim o pros não fica mais vazio e tem todas as propriedades.
+            return props;
+        } catch (IOException e) {
+            throw new dbexception(e.getMessage());
+        } // quando o bloco TRY termina, o FS é imediamente fechado com FS.CLOSE()
+    }
+
     public static void closeConnection() {
         try {
             if (conn != null) {
@@ -54,16 +64,6 @@ public class bancodados {
         }
     }
 
-
-    private static Properties loadProperties() {
-        try(FileInputStream fs = new FileInputStream("src/db.properties")) {
-            Properties props = new Properties();
-            props.load(fs);
-            return props;
-        } catch (IOException e) {
-            throw new dbexception(e.getMessage());
-        }
-    }
 }
 
 
