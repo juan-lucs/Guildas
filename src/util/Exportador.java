@@ -1,6 +1,6 @@
 package util;
 
-import Model.Time;
+import model.Entity.Time;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

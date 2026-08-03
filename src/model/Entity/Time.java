@@ -1,13 +1,13 @@
-package Model;
+package model.Entity;
 
 import enums.Modalidade;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Time {
+public class Time implements Serializable {
     private String nome;
     private Modalidade modalidade;
     private Set<Jogador> jogadores = new HashSet<>(); // USEI SET PARA NAO REPETIR OS JOGADORES

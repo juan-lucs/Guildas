@@ -47,7 +47,7 @@ A console-based tournament management system built in Java, developed as a hands
 src/
 ├── Main/
 │   └── ProgramMain.java         # Entry point, user menu
-├── Model/
+├── model/
 │   ├── Player.java
 │   ├── Team.java
 │   └── Match.java
@@ -132,7 +132,7 @@ Sistema de gerenciamento de torneios via console desenvolvido em Java, criado co
 src/
 ├── Main/
 │   └── ProgramMain.java         # Ponto de entrada, menu do usuario
-├── Model/
+├── model/
 │   ├── Jogador.java
 │   ├── Time.java
 │   └── Partida.java
@@ -218,7 +218,7 @@ A console-based tournament management system built in Java, developed as a hands
 src/
 ├── Main/
 │   └── ProgramMain.java         # Entry point, user menu
-├── Model/
+├── model/
 │   ├── Player.java
 │   ├── Team.java
 │   └── Match.java
@@ -303,7 +303,7 @@ Sistema de gerenciamento de torneios via console desenvolvido em Java, criado co
 src/
 ├── Main/
 │   └── ProgramMain.java         # Ponto de entrada, menu do usuario
-├── Model/
+├── model/
 │   ├── Jogador.java
 │   ├── Time.java
 │   └── Partida.java

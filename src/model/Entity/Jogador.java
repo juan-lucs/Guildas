@@ -1,8 +1,9 @@
-package Model;
+package model.Entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Jogador implements Comparable<Jogador> {
+public class Jogador implements Comparable<Jogador>, Serializable {
     private String nome;
     private int idade;
     private String posição;
@@ -49,7 +50,7 @@ public class Jogador implements Comparable<Jogador> {
         this.idade = idade;
     }
 
-    // Ordenação: por nome alfabético
+    // Ordenação: por nome
     @Override
     public int compareTo(Jogador outro) {
         return this.nome.compareTo(outro.nome);

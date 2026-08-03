@@ -1,10 +1,11 @@
-package Model;
+package model.Entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Partida {
+public class Partida implements Serializable {
     private Time time1;
     private Time time2;
     private LocalDate dataPartida;

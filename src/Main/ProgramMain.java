@@ -1,14 +1,13 @@
 package Main;
 
+import model.Entity.Jogador;
 import Service.*;
 
-import Model.*;
 import enums.Modalidade;
 import exeption.*;
 import util.Exportador;
 
 import java.time.LocalDate;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ProgramMain {

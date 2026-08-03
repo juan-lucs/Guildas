@@ -1,8 +1,10 @@
 package Service;
 
 import Interfaces.*;
+import model.Entity.Jogador;
+import model.Entity.Partida;
+import model.Entity.Time;
 import enums.StatusTorneio;
-import Model.*;
 import enums.*;
 import exeption.*;
 import repository.*;
