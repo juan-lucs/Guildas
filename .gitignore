@@ -21,3 +21,5 @@ Thumbs.db
 # Arquivos temporários
 *.tmp
 *.temp
+
+src/db.properties
