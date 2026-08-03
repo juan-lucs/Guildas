@@ -6,7 +6,7 @@
 out/
 *.class
 
-# Build tools, caso use Maven ou Gradle depois
+# Build tools
 target/
 build/
 .gradle/
