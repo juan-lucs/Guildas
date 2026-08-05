@@ -3,7 +3,9 @@ package model.Entity;
 import java.io.Serializable;
 import java.util.Objects;
 
+
 public class Jogador implements Comparable<Jogador>, Serializable {
+    private long id;
     private String nome;
     private int idade;
     private String posição;

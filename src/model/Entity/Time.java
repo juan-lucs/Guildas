@@ -8,9 +8,10 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Time implements Serializable {
+    private Long id;
     private String nome;
     private Modalidade modalidade;
-    private Set<Jogador> jogadores = new HashSet<>(); // USEI SET PARA NAO REPETIR OS JOGADORES
+    private Long timeId;
 
     public Time(String nome, Modalidade modalidade) {
         this.nome = nome;
@@ -43,6 +44,13 @@ public class Time implements Serializable {
 
     public Set<Jogador> getJogadores() {
         return new HashSet<>(jogadores); // CRIA UMA COPIA O SET E ENVIA, PARA PROTEÇÃO E BOA PRATICA
+    }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Partida implements Serializable {
+    private Long Id;
     private Time time1;
     private Time time2;
     private LocalDate dataPartida;
@@ -43,9 +44,15 @@ public class Partida implements Serializable {
     public void setPlacar(Time nome, int pontos) {
         placar.put(nome, pontos);
     }
+    public Long getId() {
+        return Id;
+    }
 
+    public void setId(Long id) {
+        Id = id;
+    }
     public Map<Time, Integer> getPlacar() {
-        return new HashMap<>(placar); // MESMA COISA QUE O SET, CRIA UM NOVO PARA PROTECAO E BOA PRATICA
+        return new HashMap<>(placar);
     }
 }
 
