@@ -3,13 +3,17 @@ package model.dao.impl;
 import db.bancodados;
 import db.dbexception;
 import model.Entity.Partida;
+import model.Entity.Time;
 import model.dao.PartidaDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PartidaDaoJDBC implements PartidaDao {
     private Connection conn;
@@ -37,7 +41,7 @@ public class PartidaDaoJDBC implements PartidaDao {
             if (linhasafetadas > 0) {
                 ResultSet rs = st.getGeneratedKeys();
                 if (rs.next()) {
-                    Long id = rs.getLong(1);
+                    var id = rs.getLong(1);
                     arg.setId(id);
                 } else {
                     throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
@@ -52,17 +56,57 @@ public class PartidaDaoJDBC implements PartidaDao {
     }
 
     @Override
+    public List<Partida> findAll() {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement(
+                    "SELECT partida.*," +
+                            "   t1.nome AS Time1Nome," +
+                            "   t2.nome AS Time2Nome" +
+                            "FROM partida" +
+                            "INNER JOIN time t1" +
+                            "   ON partida.time1_id = t1.id" +
+                            "INNER JOIN time t2" +
+                            " ON partida.time2_id = t2.id;"
+            );
+            rs = st.executeQuery();
+            List<Partida> list = new ArrayList<>();
+            Map<Long, Time> map = new HashMap<>();
+
+            while(rs.next()) {
+                var time1Id = map.get(rs.getLong("t1.id"));
+                var time2Id= map.get(rs.getLong("t2.id"));
+                if (time1 == null) {
+                    time1 = intanciarTime(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        }
+
+
+
+
+        return List.of();
+    }
+
+    private Time intanciarTime(ResultSet rs) throws SQLException {
+        var time = new Time();
+        time.setId(rs.getLong("t1.id"));
+
+        return null;
+    }
+
+
+
+    @Override
     public void update(Partida arg) {
 
     }
 
     @Override
     public Partida findById(Integer id) {
-        return null;
+       return null;
     }
 
-    @Override
-    public List<Partida> findAll() {
-        return List.of();
-    }
-}

@@ -13,10 +13,17 @@ public class Time implements Serializable {
     private Modalidade modalidade;
     private Long timeId;
 
-    public Time(String nome, Modalidade modalidade) {
+    public Time() {
+    }
+    public Time(Long id, String nome, Modalidade modalidade) {
+        this.id = id;
         this.nome = nome;
         this.modalidade = modalidade;
-    } // CONSTRUTOR PADRÃO
+    }
+    public Time(Long id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
 
     public void setJogador(Jogador jogador) {
         this.jogadores.add(jogador);
