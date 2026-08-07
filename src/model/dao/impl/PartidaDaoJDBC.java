@@ -75,29 +75,40 @@ public class PartidaDaoJDBC implements PartidaDao {
             Map<Long, Time> map = new HashMap<>();
 
             while(rs.next()) {
-                var time1Id = map.get(rs.getLong("t1.id"));
-                var time2Id= map.get(rs.getLong("t2.id"));
-                if (time1 == null) {
-                    time1 = intanciarTime(rs);
+                var time1Id = map.get(rs.getLong("t1_id"));
+                if (time1Id == null) {
+                    Time time1 = instanciarTime(rs, "time1_id", "Time1Nome");
+                    map.put(rs.getLong("t1_id"), time1Id);
                 }
+
+                var time2Id= map.get(rs.getLong("t2_id"));
+                if (time2Id == null) {
+                    Time time2 = instanciarTime(rs, "time2_id", "Time2Nome");
+                    map.put(rs.getLong("t2_id"), time2Id);
+                }
+
+                Partida partida = instanciarPartida(rs, time1Id, time2Id);
+                list.add(partida);
             }
+            return list;
         } catch (SQLException e) {
             throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+            bancodados.closeResultSet(rs);
         }
-
-
-
-
-        return List.of();
     }
 
-    private Time intanciarTime(ResultSet rs) throws SQLException {
-        var time = new Time();
-        time.setId(rs.getLong("t1.id"));
-
-        return null;
+    private Partida instanciarPartida(ResultSet rs, Time time1Id, Time time2Id) throws SQLException {
+        return new Partida(time1Id, time2Id, rs.getDate("data_partida").toLocalDate());
     }
 
+    private Time instanciarTime(ResultSet rs, String colunaId, String colunaNome) throws SQLException {
+        Time time = new Time();
+        time.setId(rs.getLong(colunaId));
+        time.setNome(rs.getString(colunaNome));
+        return time;
+    }
 
 
     @Override
