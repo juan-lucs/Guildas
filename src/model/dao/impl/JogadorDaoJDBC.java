@@ -7,6 +7,7 @@ import model.dao.JogadorDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -34,6 +35,16 @@ public class JogadorDaoJDBC implements JogadorDao {
 
             int linhasafetadas = st.executeUpdate();
 
+            if (linhasafetadas > 0) {
+                ResultSet rs = st.getGeneratedKeys();
+                if (rs.next()) {
+                    var id = rs.getLong(1);
+                    arg.setId(id);
+                } else {
+                    throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
+                }
+                bancodados.closeResultSet(rs);
+            }
         } catch (SQLException e ) {
             throw new dbexception(e.getMessage());
         } finally {
