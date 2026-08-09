@@ -8,14 +8,33 @@ public class Jogador implements Comparable<Jogador>, Serializable {
     private long id;
     private String nome;
     private int idade;
-    private String posição;
+    private String posicao;
 
-    public String getPosição() {
-        return posição;
+
+    private Time time;
+
+    public String getPosicao() {
+        return posicao;
     }
 
-    public void setPosição(String posição) {
-        this.posição = posição;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
+    public void setTime(Time time) {
+        this.time = time;
+    }
+
+    public void setPosicao(String posição) {
+        this.posicao = posição;
     }
 
     public String getNome() {
@@ -47,7 +66,7 @@ public class Jogador implements Comparable<Jogador>, Serializable {
     }
 
     public Jogador(String posição, String nome, int idade) {
-        this.posição = posição;
+        this.posicao = posição;
         this.nome = nome;
         this.idade = idade;
     }

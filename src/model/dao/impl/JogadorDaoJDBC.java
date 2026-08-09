@@ -4,6 +4,7 @@ import model.Entity.Jogador;
 import model.dao.JogadorDao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 public class JogadorDaoJDBC implements JogadorDao {
@@ -15,7 +16,20 @@ public class JogadorDaoJDBC implements JogadorDao {
 
     @Override
     public void insert(Jogador arg) {
-
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement(
+                    "INSERT INTO jogador " +
+                            "(nome,idade,posicao,time_id) " +
+                            "VALUES "
+                    + "(?,?,?,?)",
+                    st.RETURN_GENERATED_KEYS);
+            st.setString(1, arg.getNome());
+            st.setInt(2, arg.getIdade());
+            st.setString(3, arg.getPosicao());
+            st.
+            )
+        }
     }
 
     @Override
