@@ -61,14 +61,12 @@ public class PartidaDaoJDBC implements PartidaDao {
         ResultSet rs = null;
         try {
             st = conn.prepareStatement(
-                    "SELECT partida.*," +
-                            "   t1.nome AS Time1Nome," +
-                            "   t2.nome AS Time2Nome" +
-                            "FROM partida" +
-                            "INNER JOIN time t1" +
-                            "   ON partida.time1_id = t1.id" +
-                            "INNER JOIN time t2" +
-                            " ON partida.time2_id = t2.id;"
+                    "SELECT partida.*, " +
+                            "       t1.nome AS Time1Nome, " +
+                            "       t2.nome AS Time2Nome " +
+                            "FROM partida " +
+                            "INNER JOIN time t1 ON partida.time1_id = t1.id " +
+                            "INNER JOIN time t2 ON partida.time2_id = t2.id;"
             );
             rs = st.executeQuery();
             List<Partida> list = new ArrayList<>();
@@ -111,13 +109,14 @@ public class PartidaDaoJDBC implements PartidaDao {
     }
 
 
-    @Override
-    public void update(Partida arg) {
+//    @Override
+//    public void update(Partida arg) {
+//
+//    }
 
-    }
-
     @Override
-    public Partida findById(Integer id) {
+    public Partida findByData(Integer id) {
        return null;
     }
+}
 
