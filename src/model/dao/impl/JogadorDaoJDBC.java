@@ -3,12 +3,14 @@ package model.dao.impl;
 import db.bancodados;
 import db.dbexception;
 import model.Entity.Jogador;
+import model.Entity.Time;
 import model.dao.JogadorDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JogadorDaoJDBC implements JogadorDao {
@@ -54,7 +56,6 @@ public class JogadorDaoJDBC implements JogadorDao {
 
     @Override
     public void update(Jogador arg) {
-
     }
 
     @Override
@@ -63,7 +64,33 @@ public class JogadorDaoJDBC implements JogadorDao {
     }
 
     @Override
-    public List<Jogador> findAll() {
-        return List.of();
+    public List<Jogador> findAllOnATeam(Time time) {
+        ResultSet rs = null;
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement(
+                    "SELECT * FROM jogador WHERE time_id = ?");
+            st.setLong(1, time.getId());
+            rs = st.executeQuery();
+
+            List<Jogador> list = new ArrayList<>();
+
+            while(rs.next()) {
+                Jogador arg = new Jogador();
+                arg.setNome(rs.getString("nome"));
+                arg.setIdade(rs.getInt("idade"));
+                arg.setPosicao(rs.getString("posicao"));
+                arg.setTime(time);
+                list.add(arg);
+            }
+            return list;
+        }
+        catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+            bancodados.closeResultSet(rs);
+        }
+
     }
 }

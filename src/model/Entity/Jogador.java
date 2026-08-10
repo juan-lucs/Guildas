@@ -10,6 +10,8 @@ public class Jogador implements Comparable<Jogador>, Serializable {
     private int idade;
     private String posicao;
 
+    public Jogador() {
+    }
 
     private Time time;
 
@@ -33,8 +35,8 @@ public class Jogador implements Comparable<Jogador>, Serializable {
         this.time = time;
     }
 
-    public void setPosicao(String posição) {
-        this.posicao = posição;
+    public void setPosicao(String posicao) {
+        this.posicao = posicao;
     }
 
     public String getNome() {
@@ -57,16 +59,16 @@ public class Jogador implements Comparable<Jogador>, Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Jogador jogador = (Jogador) o;
-        return Objects.equals(getNome(), jogador.getNome()) && Objects.equals(getPosição(), jogador.getPosição());
+        return Objects.equals(getNome(), jogador.getNome()) && Objects.equals(getPosicao(), jogador.getPosicao());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getNome(), getPosição());
+        return Objects.hash(getNome(), getPosicao());
     }
 
-    public Jogador(String posição, String nome, int idade) {
-        this.posicao = posição;
+    public Jogador(String nome, int idade, String posicao) {
+        this.posicao = posicao;
         this.nome = nome;
         this.idade = idade;
     }
