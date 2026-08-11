@@ -39,12 +39,13 @@ public class JogadorDaoJDBC implements JogadorDao {
 
             if (linhasafetadas > 0) {
                 ResultSet rs = st.getGeneratedKeys();
-                if (rs.next()) {
+                    if (rs.next()) {
                     var id = rs.getLong(1);
                     arg.setId(id);
-                } else {
-                    throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
-                }
+                    }
+                bancodados.closeResultSet(rs);
+                }   else {
+                throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
                 bancodados.closeResultSet(rs);
             }
         } catch (SQLException e ) {
