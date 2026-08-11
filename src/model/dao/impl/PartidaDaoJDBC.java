@@ -43,11 +43,13 @@ public class PartidaDaoJDBC implements PartidaDao {
                 if (rs.next()) {
                     var id = rs.getLong(1);
                     arg.setId(id);
-                } else {
-                    throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
                 }
                 bancodados.closeResultSet(rs);
+                }
+            else {
+                throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
             }
+
         } catch (SQLException e) {
             throw new dbexception(e.getMessage());
     } finally {
