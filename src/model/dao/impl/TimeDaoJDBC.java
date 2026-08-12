@@ -51,13 +51,26 @@ public class TimeDaoJDBC implements TimeDao {
     }
 
     @Override
-    public void update(Time arg) {
-
+    public void updatePontos(Time arg) {
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement(
+                    "UPDATE time " +
+                            "SET pontos = (?)"
+                            + " WHERE id = ?"
+            );
+            st.setInt(1, arg.getPontos());
+            st.setLong(2, arg.getId());
+        } catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+        }
     }
 
     @Override
-    public Time findById(Integer id) {
-        return null;
+    public Time findByNome(Integer id) {
+
     }
 
     @Override

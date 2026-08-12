@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface TimeDao {
     void insert(Time arg);
-    void update(Time arg);
-    Time findById(Integer id);
+    void updatePontos(Time arg);
+    Time findByNome(Integer id);
     List<Time> findAll();
 }
 
