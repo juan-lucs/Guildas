@@ -9,6 +9,7 @@ public class Jogador implements Comparable<Jogador>, Serializable {
     private String nome;
     private int idade;
     private String posicao;
+    private Long timeId;
 
     public Jogador() {
     }
