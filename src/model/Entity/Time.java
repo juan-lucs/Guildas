@@ -11,6 +11,8 @@ public class Time implements Serializable {
     private Long id;
     private String nome;
     private Modalidade modalidade;
+    private int pontos;
+
     private Set<Jogador> jogadores = new HashSet<>();
 
     public Time() {
@@ -58,6 +60,18 @@ public class Time implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setJogadores(Set<Jogador> jogadores) {
+        this.jogadores = jogadores;
+    }
+
+    public int getPontos() {
+        return pontos;
+    }
+
+    public void setPontos(int pontos) {
+        this.pontos = pontos;
     }
 
     @Override
