@@ -1,4 +1,4 @@
-spackage model.dao.impl;
+package model.dao.impl;
 
 import db.bancodados;
 import db.dbexception;
