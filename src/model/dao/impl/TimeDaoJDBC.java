@@ -70,7 +70,7 @@ public class TimeDaoJDBC implements TimeDao {
 
     @Override
     public Time findByNome(Integer id) {
-
+        return new Time();
     }
 
     @Override

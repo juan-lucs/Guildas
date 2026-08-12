@@ -10,4 +10,5 @@ public interface JogadorDao {
     void update(Jogador arg);
     Jogador findById(Integer id);
     List<Jogador> findAllOnATeam(Time time);
+    void adicionarAoTime(Jogador jogador, Time time);
 }

@@ -94,4 +94,26 @@ public class JogadorDaoJDBC implements JogadorDao {
         }
 
     }
+
+    @Override
+    public void adicionarAoTime(Jogador jogador, Time time) {
+
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement(
+                    "UPDATE jogador SET time_id = ? WHERE id = ?"
+            );
+
+            st.setLong(1, time.getId());
+            st.setLong(2, jogador.getId());
+
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+        }
+    }
 }
