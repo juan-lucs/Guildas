@@ -46,7 +46,7 @@ public class JogadorDaoJDBC implements JogadorDao {
                 bancodados.closeResultSet(rs);
                 }   else {
                 throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
-                bancodados.closeResultSet(rs);
+
             }
         } catch (SQLException e ) {
             throw new dbexception(e.getMessage());

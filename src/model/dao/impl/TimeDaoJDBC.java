@@ -2,6 +2,7 @@ package model.dao.impl;
 
 import db.bancodados;
 import db.dbexception;
+import model.Entity.Jogador;
 import model.Entity.Time;
 import model.dao.TimeDao;
 
@@ -9,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TimeDaoJDBC implements TimeDao {
@@ -75,6 +77,27 @@ public class TimeDaoJDBC implements TimeDao {
 
     @Override
     public List<Time> findAll() {
-        return List.of();
+        return null;
+    }
+
+    @Override
+    public List<String> findAllNomes() {
+        ResultSet rs = null;
+        PreparedStatement st = null;
+        try {
+            rs = st.executeQuery("SELECT nome FROM time");
+            List<String> nometimes = new ArrayList<>();
+
+            while(rs.next()) {
+                nometimes.add(rs.getString(1));
+                }
+            return nometimes;
+        }
+        catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+            bancodados.closeResultSet(rs);
+        }
     }
 }

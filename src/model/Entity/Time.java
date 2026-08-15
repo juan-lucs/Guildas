@@ -12,7 +12,6 @@ public class Time implements Serializable {
     private String nome;
     private Modalidade modalidade;
     private int pontos;
-
     private Set<Jogador> jogadores = new HashSet<>();
 
     public Time() {

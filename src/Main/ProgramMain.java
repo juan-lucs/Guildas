@@ -54,7 +54,6 @@ public class ProgramMain {
                         System.out.println((i + 1) + " - " + modalidades[i]);
                     }
                     System.out.print("Escolha: ");
-
                     try {
                         int idxModalidade = Integer.parseInt(sc.nextLine().trim()) - 1;
                         Modalidade modalidade = modalidades[idxModalidade];

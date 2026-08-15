@@ -7,7 +7,7 @@ import model.dao.impl.TimeDaoJDBC;
 
 public class DaoFactory {
 
-    public static TimeDao createTorneioDao() {
+    public static TimeDao createTimeDao() {
         return new TimeDaoJDBC(bancodados.getConnection());
     }
 

@@ -7,12 +7,20 @@ import model.Entity.Time;
 import enums.StatusTorneio;
 import enums.*;
 import exeption.*;
+import model.dao.DaoFactory;
+import model.dao.JogadorDao;
+import model.dao.PartidaDao;
+import model.dao.TimeDao;
 import repository.*;
 
 import java.time.LocalDate;
 import java.util.*;
 
 public class TorneioService implements Exportavel, Classificavel, Estatistico {
+
+    JogadorDao jogadorDao = DaoFactory.createJogadorDao();
+    TimeDao TimeDao = DaoFactory.createTimeDao();
+    PartidaDao PartidaDao = DaoFactory.createPartidaDao();
 
     private Map<Time, Integer> pontosDeCadaTime = new HashMap<>();
     //private final Repositorio<Time> repositorio = new Repositorio<>();
@@ -21,7 +29,8 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
 
     // CADASTRAR TIME
     public void cadastrarTime(String nomeTime, Modalidade modalidade) throws TimeDuplicadoException, TorneioFinalizadoException {
-        verificarTorneioAberto();
+
+        List<Time> times = TimeDao.findAll();
         for (Time t : repositorio.listarTodos()) {
             if (t.getNome().equalsIgnoreCase(nomeTime)) {
                 throw new TimeDuplicadoException("Já existe um time com o nome '" + nomeTime + "'!");
@@ -34,9 +43,8 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
     }
 
     // ADICIONAR JOGADOR AO TIME
-    public void adicionarJogadorTime(String nometime, Jogador jogador) throws TimeNaoEncontradoException, JogadorDuplicadoException, TorneioFinalizadoException {
-        verificarTorneioAberto();
-        Time time = buscarTimePorNome(nometime);
+    public void adicionarJogadorTime(String nometime, Jogador jogador) throws JogadorDuplicadoException, TorneioFinalizadoException {
+        Time time = TimeDao.findByNome(nometime);
 
         if (time.getJogadores().contains(jogador)) {
             throw new JogadorDuplicadoException("O jogador '" + jogador.getNome() + "' já está cadastrado no time '" + time.getNome() + "'!");
@@ -104,16 +112,6 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         for (Time t : times) {
             System.out.println("  - " + t.getNome() + " [" + t.getModalidade() + "]");
         }
-    }
-
-    // HELPER PRIVADO
-    private Time buscarTimePorNome(String nome) throws TimeNaoEncontradoException {
-        for (Time t : repositorio.listarTodos()) {
-            if (t.getNome().equalsIgnoreCase(nome)) {
-                return t;
-            }
-        }
-        throw new TimeNaoEncontradoException("Time '" + nome + "' não encontrado!");
     }
 
     // HELPER PRIVADO

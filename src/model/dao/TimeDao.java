@@ -9,5 +9,6 @@ public interface TimeDao {
     void updatePontos(Time arg);
     Time findByNome(Integer id);
     List<Time> findAll();
+    List<String> findAllNomes();
 }
 
