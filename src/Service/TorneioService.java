@@ -41,17 +41,17 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         System.out.println("Time '" + nomeTime + "' cadastrado com sucesso!");
     }
 
-//    // ADICIONAR JOGADOR AO TIME
-//    public void adicionarJogadorTime(String nometime, Jogador jogador) throws JogadorDuplicadoException, TorneioFinalizadoException {
-//        Time time = TimeDao.findByNome(nometime);
-//
-//        if (time.getJogadores().contains(jogador)) {
-//            throw new JogadorDuplicadoException("O jogador '" + jogador.getNome() + "' já está cadastrado no time '" + time.getNome() + "'!");
-//        }
-//
-//        time.setJogador(jogador);
-//        System.out.println("Jogador '" + jogador.getNome() + "' adicionado ao time '" + time.getNome() + "' com sucesso!");
-//    }
+    // ADICIONAR JOGADOR AO TIME
+    public void adicionarJogadorTime(String nometime, Jogador jogador) throws JogadorDuplicadoException, SQLException {
+        Time time = TimeDao.findByNome(nometime);
+
+        if (time.getJogadores().contains(jogador)) {
+            throw new JogadorDuplicadoException("O jogador '" + jogador.getNome() + "' já está cadastrado no time '" + time.getNome() + "'!");
+        }
+
+        time.setJogador(jogador);
+        System.out.println("Jogador '" + jogador.getNome() + "' adicionado ao time '" + time.getNome() + "' com sucesso!");
+    }
 //
 //    // REGISTRAR PARTIDA
 //    public void registrarPartida(String time1, String time2, LocalDate dataPartida, int pntstime1, int pntstime2)

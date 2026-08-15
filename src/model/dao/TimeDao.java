@@ -8,7 +8,7 @@ import java.util.List;
 public interface TimeDao {
     void insert(String nometime, Modalidade modalidade);
     void updatePontos(Time arg);
-    Time findByNome(Integer id);
+    Time findByNome(String nome);
     List<Time> findAll();
     List<String> findAllNomes();
 }

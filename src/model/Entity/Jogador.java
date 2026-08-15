@@ -14,6 +14,12 @@ public class Jogador implements Comparable<Jogador>, Serializable {
     public Jogador() {
     }
 
+    public Jogador(String nome, int idade, String posicao) {
+        this.posicao = posicao;
+        this.nome = nome;
+        this.idade = idade;
+    }
+    
     private Time time;
 
     public String getPosicao() {
@@ -68,11 +74,6 @@ public class Jogador implements Comparable<Jogador>, Serializable {
         return Objects.hash(getNome(), getPosicao());
     }
 
-    public Jogador(String nome, int idade, String posicao) {
-        this.posicao = posicao;
-        this.nome = nome;
-        this.idade = idade;
-    }
 
     // Ordenação: por nome
     @Override

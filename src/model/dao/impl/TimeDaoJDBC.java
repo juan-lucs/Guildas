@@ -61,8 +61,34 @@ public class TimeDaoJDBC implements TimeDao {
     }
 
     @Override
-    public Time findByNome(Integer id) {
-        return new Time();
+    public Time findByNome(String nome) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement(
+                    "SELECT * " +
+                            "FROM time " +
+                            "JOIN jogador " +
+                            "ON jogador.time_id = time.id" +
+                            "WHERE nome = ?"
+            );
+
+            st.setString(1, nome);
+
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                Time time = new Time();
+                time.setId(rs.getLong("id"));
+                time.setNome(rs.getString("nome"));
+
+                return time;
+            }
+
+            return null;
+        } catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        }
     }
 
     @Override

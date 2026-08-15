@@ -4,10 +4,12 @@ import Service.*;
 
 import enums.Modalidade;
 import exeption.*;
+import model.Entity.Jogador;
 
 
 import java.sql.SQLException;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ProgramMain {
@@ -65,28 +67,28 @@ public class ProgramMain {
                     }
                 }
 
-//                case 2 -> {
-//                    // ── ADICIONAR JOGADOR ──
-//                    System.out.print("Nome do time: ");
-//                    String nomeTime = sc.nextLine().trim();
-//
-//                    System.out.print("Nome do jogador: ");
-//                    String nomeJogador = sc.nextLine().trim();
-//
-//                    System.out.print("Posição do jogador: ");
-//                    String posicao = sc.nextLine().trim();
-//
-//                    System.out.print("Idade do jogador: ");
-//                    try {
-//                        int idade = Integer.parseInt(sc.nextLine().trim());
-//                        Jogador jogador = new Jogador(posicao, nomeJogador, idade);
-//                        service.adicionarJogadorTime(nomeTime, jogador);
-//                    } catch (TimeNaoEncontradoException | JogadorDuplicadoException | TorneioFinalizadoException e) {
-//                        System.out.println(e.getMessage());
-//                    } catch (NumberFormatException e) {
-//                        System.out.println(" Idade inválida!");
-//                    }
-//                }
+                case 2 -> {
+                    // ── ADICIONAR JOGADOR ──
+                    System.out.print("Nome do time: ");
+                    String nomeTime = sc.nextLine().trim();
+
+                    System.out.print("Nome do jogador: ");
+                    String nomeJogador = sc.nextLine().trim();
+
+                    System.out.print("Posição do jogador: ");
+                    String posicao = sc.nextLine().trim();
+
+                    System.out.print("Idade do jogador: ");
+                    try {
+                        int idade = sc.nextInt();
+                        var jogador = new Jogador(nomeJogador, idade, posicao);
+                        service.adicionarJogadorTime(nomeTime, jogador);
+                    } catch (TimeNaoEncontradoException | JogadorDuplicadoException | TorneioFinalizadoException e) {
+                        System.out.println(e.getMessage());
+                    } catch (InputMismatchException e) {
+                        System.out.println("Idade inválida!");
+                    }
+                }
 //
 //                case 3 -> {
 //                    // ── REGISTRAR PARTIDA ──
