@@ -2,14 +2,12 @@ package model.dao.impl;
 
 import db.bancodados;
 import db.dbexception;
+import enums.Modalidade;
 import model.Entity.Jogador;
 import model.Entity.Time;
 import model.dao.TimeDao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class TimeDaoJDBC implements TimeDao {
     }
 
     @Override
-    public void insert(Time arg) {
+    public void insert(String nome, Modalidade modalidade) {
         PreparedStatement st = null;
         try {
             st = conn.prepareStatement("INSERT INTO time " +
@@ -29,20 +27,12 @@ public class TimeDaoJDBC implements TimeDao {
                     "VALUES " +
                     "(? , ?)",
                     st.RETURN_GENERATED_KEYS);
-            st.setString(1, arg.getNome());
-            st.setString(2, String.valueOf(arg.getModalidade()));
+            st.setString(1, nome);
+            st.setString(2, String.valueOf(modalidade));
             // pontos são DEFAULT = 0
 
             int linhasafetadas = st.executeUpdate();
-
-            if (linhasafetadas > 0) {
-                ResultSet rs = st.getGeneratedKeys();
-                        if (rs.next()) {
-                    Long id = rs.getLong(1);
-                    arg.setId(id);
-                    }
-                bancodados.closeResultSet(rs);
-            } else {
+            if (linhasafetadas < 0) {
                 throw new dbexception("Nenhuma linha alterada");
             }
         } catch (SQLException e) {
@@ -83,8 +73,9 @@ public class TimeDaoJDBC implements TimeDao {
     @Override
     public List<String> findAllNomes() {
         ResultSet rs = null;
-        PreparedStatement st = null;
+        Statement st = null;
         try {
+            st = conn.createStatement();
             rs = st.executeQuery("SELECT nome FROM time");
             List<String> nometimes = new ArrayList<>();
 
