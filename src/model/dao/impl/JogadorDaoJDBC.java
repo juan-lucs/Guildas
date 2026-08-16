@@ -23,14 +23,14 @@ public class JogadorDaoJDBC implements JogadorDao {
         try {
             st = conn.prepareStatement(
                     "INSERT INTO jogador " +
-                            "(nome,idade,posicao,time_id) " +
+                            "(nome,idade,posicao) " +
                             "VALUES "
-                    + "(?,?,?,?)",
+                    + "(?,?,?)",
                     st.RETURN_GENERATED_KEYS);
             st.setString(1, arg.getNome());
             st.setInt(2, arg.getIdade());
             st.setString(3, arg.getPosicao());
-            st.setLong(4, arg.getTime().getId());
+//            st.setLong(4, arg.getTime().getId());
 
             int linhasafetadas = st.executeUpdate();
 
@@ -54,6 +54,28 @@ public class JogadorDaoJDBC implements JogadorDao {
 
     @Override
     public void update(Jogador arg) {
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement(
+                    "UPDATE jogador "
+                            + "SET nome = ?, idade = ?, posicao = ?,time_id = ? "
+                            + "WHERE Id = ?");
+
+            st.setString(1, arg.getNome());
+            st.setInt(2, arg.getIdade());
+            st.setString(3, arg.getPosicao());
+            st.setLong(5, arg.getTime().getId());
+            st.setLong(6, arg.getId());
+
+            st.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        }
+        finally {
+            bancodados.closeStatement(st);
+        }
+    }
     }
 
     @Override
