@@ -100,9 +100,10 @@ public class TimeDaoJDBC implements TimeDao {
     }
 
     @Override
-    public void pesquisarJogador(Time t, Jogador j) throws JogadorDuplicadoException {
+    public boolean pesquisarJogador(Time t, Jogador j) throws JogadorDuplicadoException {
         PreparedStatement st = null;
         ResultSet rs = null;
+        var existe = false;
         try {
             st = conn.prepareStatement("SELECT 1 " +
                     "FROM jogador " +
@@ -111,10 +112,10 @@ public class TimeDaoJDBC implements TimeDao {
             if(rs.next()) {
                 throw new JogadorDuplicadoException("Jogador já está cadastrado nesse Time!");
             }
+            return existe;
         } catch (SQLException e) {
             throw new dbexception(e.getMessage());
         }
-
     }
     @Override
     public List<String> findAllNomes() {
