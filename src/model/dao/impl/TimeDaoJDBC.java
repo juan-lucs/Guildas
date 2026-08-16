@@ -3,6 +3,7 @@ package model.dao.impl;
 import db.bancodados;
 import db.dbexception;
 import enums.Modalidade;
+import exeption.JogadorDuplicadoException;
 import exeption.TimeNaoEncontradoException;
 import model.Entity.Jogador;
 import model.Entity.Time;
@@ -70,26 +71,20 @@ public class TimeDaoJDBC implements TimeDao {
         try {
             st = conn.prepareStatement(
                     "SELECT * " +
-                            "FROM time " +
-                            "JOIN jogador " +
-                            "ON jogador.time_id = time.id " +
-                            "WHERE time.nome = ?"
+                    "FROM time " +
+                    "WHERE nome = ?"
+
             );
             st.setString(1, nome);
 
             rs = st.executeQuery();
             var time = new Time();
-            var j = new Jogador();
-            Set<Jogador> jogadores = new HashSet<>();
             if (rs.next()) {
                 time.setId(rs.getLong("id"));
                 time.setNome(rs.getString("nome"));
-                j.setNome("jogador.nome");
-                jogadores.add(j);
             } else {
                 throw new TimeNaoEncontradoException("time nao encontrado");
             }
-            time.setJogadores(jogadores);
             return time;
         } catch (SQLException e) {
             throw new dbexception(e.getMessage());
@@ -104,6 +99,23 @@ public class TimeDaoJDBC implements TimeDao {
         return null;
     }
 
+    @Override
+    public void pesquisarJogador(Time t, Jogador j) throws JogadorDuplicadoException {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement("SELECT 1 " +
+                    "FROM jogador " +
+                    "WHERE id = ? ");
+            st.setLong(1, j.getId());
+            if(rs.next()) {
+                throw new JogadorDuplicadoException("Jogador já está cadastrado nesse Time!");
+            }
+        } catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        }
+
+    }
     @Override
     public List<String> findAllNomes() {
         ResultSet rs = null;
