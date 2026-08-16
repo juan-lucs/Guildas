@@ -10,17 +10,17 @@ public class Jogador implements Comparable<Jogador>, Serializable {
     private int idade;
     private String posicao;
     private Long timeId;
+    private Time time;
 
     public Jogador() {
     }
 
-    public Jogador(String nome, int idade, String posicao) {
+    public Jogador(String nome, int idade, String posicao, Time time) {
         this.posicao = posicao;
         this.nome = nome;
         this.idade = idade;
+        this.time = time;
     }
-    
-    private Time time;
 
     public String getPosicao() {
         return posicao;
