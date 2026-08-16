@@ -13,7 +13,7 @@ public interface TimeDao {
     void updatePontos(Time arg);
     Time findByNome(String nome) throws TimeNaoEncontradoException;
     List<Time> findAll();
-    void pesquisarJogador(Time t, Jogador j) throws JogadorDuplicadoException;
+    boolean pesquisarJogador(Time t, Jogador j) throws JogadorDuplicadoException;
     List<String> findAllNomes();
 }
 

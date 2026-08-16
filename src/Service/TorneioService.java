@@ -1,6 +1,7 @@
 package Service;
 
 import Interfaces.*;
+import db.dbexception;
 import model.Entity.Jogador;
 import model.Entity.Partida;
 import model.Entity.Time;
@@ -20,36 +21,36 @@ import java.util.*;
 public class TorneioService implements Exportavel, Classificavel, Estatistico {
 
     JogadorDao jogadorDao = DaoFactory.createJogadorDao();
-    TimeDao TimeDao = DaoFactory.createTimeDao();
+    TimeDao timeDao = DaoFactory.createTimeDao();
     PartidaDao PartidaDao = DaoFactory.createPartidaDao();
 
-    private Map<Time, Integer> pontosDeCadaTime = new HashMap<>();
+//    private Map<Time, Integer> pontosDeCadaTime = new HashMap<>();
     //private final Repositorio<Time> repositorio = new Repositorio<>();
     //private Set<Partida> partidas = new HashSet<>();
 //    private StatusTorneio status = StatusTorneio.ABERTO;
 
     // CADASTRAR TIME
-    public void cadastrarTime(String nomeTime, Modalidade modalidade) throws TimeDuplicadoException, SQLException {
+    public void cadastrarTime(String nomeTime, Modalidade modalidade) throws TimeDuplicadoException, dbexception {
         System.out.println();
-        List<String> times = TimeDao.findAllNomes();
-        for (int i = 0; i < times.size(); i++) {
-            if (times.get(i).equalsIgnoreCase(nomeTime)) {
+        List<String> times = timeDao.findAllNomes();
+        for (String time : times) {
+            if (time.equalsIgnoreCase(nomeTime)) {
                 throw new TimeDuplicadoException("Já existe um time com o nome '" + nomeTime + "'!");
             }
         }
-        TimeDao.insert(nomeTime, modalidade);
+        timeDao.insert(nomeTime, modalidade);
         System.out.println("Time '" + nomeTime + "' cadastrado com sucesso!");
     }
 
     // ADICIONAR JOGADOR AO TIME
-    public void adicionarJogadorTime(String nometime, Jogador jogador) throws JogadorDuplicadoException, SQLException {
-        Time time = TimeDao.findByNome(nometime);
-
-        if (time.getJogadores().contains(jogador)) {
-            throw new JogadorDuplicadoException("O jogador '" + jogador.getNome() + "' já está cadastrado no time '" + time.getNome() + "'!");
+    public void adicionarJogadorTime(String nometime, String nomej , int idade, String posicao) throws TimeNaoEncontradoException, JogadorDuplicadoException, dbexception {
+        Time time = timeDao.findByNome(nometime); // Se não existir ele vai passar reto com o exception
+        var jogador = new Jogador(nomej, idade, posicao /*, time */ );
+        jogadorDao.insert(jogador);
+        if (!timeDao.pesquisarJogador(time, jogador)) {
+            jogador.setTime(time);
         }
-
-        time.setJogador(jogador);
+        jogadorDao.update(jogador);
         System.out.println("Jogador '" + jogador.getNome() + "' adicionado ao time '" + time.getNome() + "' com sucesso!");
     }
 //
@@ -141,10 +142,7 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
     @Override
     public int getPontuacao() {
         // retorna a maior pontuação do torneio
-        return pontosDeCadaTime.values().stream()
-                .mapToInt(Integer::intValue)
-                .max()
-                .orElse(0);
+        return 2;
     }
 
     @Override

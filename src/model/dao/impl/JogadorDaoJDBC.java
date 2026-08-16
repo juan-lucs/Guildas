@@ -58,15 +58,14 @@ public class JogadorDaoJDBC implements JogadorDao {
         try {
             st = conn.prepareStatement(
                     "UPDATE jogador "
-                            + "SET nome = ?, idade = ?, posicao = ?,time_id = ? "
+                            + "SET nome = ?, idade = ?, posicao = ?, time_id = ? "
                             + "WHERE Id = ?");
 
             st.setString(1, arg.getNome());
             st.setInt(2, arg.getIdade());
             st.setString(3, arg.getPosicao());
-            st.setLong(5, arg.getTime().getId());
-            st.setLong(6, arg.getId());
-
+            st.setLong(4, arg.getTime().getId());
+            st.setLong(5, arg.getId());
             st.executeUpdate();
         }
         catch (SQLException e) {
@@ -75,7 +74,6 @@ public class JogadorDaoJDBC implements JogadorDao {
         finally {
             bancodados.closeStatement(st);
         }
-    }
     }
 
     @Override

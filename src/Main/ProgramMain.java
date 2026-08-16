@@ -2,9 +2,11 @@ package Main;
 
 import Service.*;
 
+import db.dbexception;
 import enums.Modalidade;
 import exeption.*;
 import model.Entity.Jogador;
+import model.Entity.Time;
 
 
 import java.sql.SQLException;
@@ -37,6 +39,7 @@ public class ProgramMain {
 
             int opcao;
             try {
+
                 opcao = Integer.parseInt(sc.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println("Opção inválida! Digite um número.");
@@ -60,7 +63,8 @@ public class ProgramMain {
                         int idxModalidade = Integer.parseInt(sc.nextLine().trim()) - 1;
                         Modalidade modalidade = arrayModalidades[idxModalidade];
                         service.cadastrarTime(nomeTime, modalidade);
-                    } catch (TimeDuplicadoException | SQLException e) {
+                        sc.nextLine();
+                    } catch (TimeDuplicadoException | dbexception e) {
                         System.out.println(e.getMessage());
                     } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
                         System.out.println("Modalidade inválida!");
@@ -81,9 +85,9 @@ public class ProgramMain {
                     System.out.print("Idade do jogador: ");
                     try {
                         int idade = sc.nextInt();
-                        var jogador = new Jogador(nomeJogador, idade, posicao);
-                        service.adicionarJogadorTime(nomeTime, jogador);
-                    } catch (TimeNaoEncontradoException | JogadorDuplicadoException | TorneioFinalizadoException e) {
+                        service.adicionarJogadorTime(nomeTime, nomeJogador, idade, posicao);
+                        sc.nextLine();
+                    } catch (JogadorDuplicadoException | TimeNaoEncontradoException | dbexception e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Idade inválida!");

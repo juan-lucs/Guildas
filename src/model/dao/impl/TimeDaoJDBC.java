@@ -103,16 +103,18 @@ public class TimeDaoJDBC implements TimeDao {
     public boolean pesquisarJogador(Time t, Jogador j) throws JogadorDuplicadoException {
         PreparedStatement st = null;
         ResultSet rs = null;
-        var existe = false;
         try {
-            st = conn.prepareStatement("SELECT 1 " +
+            st = conn.prepareStatement("SELECT * " +
                     "FROM jogador " +
-                    "WHERE id = ? ");
+                    "WHERE id = ? AND time_id = ?");
             st.setLong(1, j.getId());
+            st.setLong(2, t.getId());
+            rs = st.executeQuery();
+
             if(rs.next()) {
                 throw new JogadorDuplicadoException("Jogador já está cadastrado nesse Time!");
             }
-            return existe;
+            return false;
         } catch (SQLException e) {
             throw new dbexception(e.getMessage());
         }
