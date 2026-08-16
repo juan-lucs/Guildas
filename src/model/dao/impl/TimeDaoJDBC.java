@@ -3,13 +3,16 @@ package model.dao.impl;
 import db.bancodados;
 import db.dbexception;
 import enums.Modalidade;
+import exeption.TimeNaoEncontradoException;
 import model.Entity.Jogador;
 import model.Entity.Time;
 import model.dao.TimeDao;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TimeDaoJDBC implements TimeDao {
     private Connection conn;
@@ -61,7 +64,7 @@ public class TimeDaoJDBC implements TimeDao {
     }
 
     @Override
-    public Time findByNome(String nome) {
+    public Time findByNome(String nome) throws TimeNaoEncontradoException{
         PreparedStatement st = null;
         ResultSet rs = null;
         try {
@@ -69,25 +72,30 @@ public class TimeDaoJDBC implements TimeDao {
                     "SELECT * " +
                             "FROM time " +
                             "JOIN jogador " +
-                            "ON jogador.time_id = time.id" +
-                            "WHERE nome = ?"
+                            "ON jogador.time_id = time.id " +
+                            "WHERE time.nome = ?"
             );
-
             st.setString(1, nome);
 
             rs = st.executeQuery();
-
+            var time = new Time();
+            var j = new Jogador();
+            Set<Jogador> jogadores = new HashSet<>();
             if (rs.next()) {
-                Time time = new Time();
                 time.setId(rs.getLong("id"));
                 time.setNome(rs.getString("nome"));
-
-                return time;
+                j.setNome("jogador.nome");
+                jogadores.add(j);
+            } else {
+                throw new TimeNaoEncontradoException("time nao encontrado");
             }
-
-            return null;
+            time.setJogadores(jogadores);
+            return time;
         } catch (SQLException e) {
             throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+            bancodados.closeResultSet(rs);
         }
     }
 
@@ -117,4 +125,5 @@ public class TimeDaoJDBC implements TimeDao {
             bancodados.closeResultSet(rs);
         }
     }
+
 }
