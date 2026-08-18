@@ -1,343 +1,481 @@
+# Sistema de Gerenciamento de Guildas
 
-# Tournament Management System
+Sistema de gerenciamento de guildas desenvolvido em **Java**, criado como projeto prático de estudos para aplicar e aprofundar conceitos de **Programação Orientada a Objetos, Collections, JDBC, banco de dados relacional e organização em camadas**.
 
-![Java](https://img.shields.io/badge/Java-17%2B-blue?style=flat-square&logo=openjdk)
-![Status](https://img.shields.io/badge/Status-Complete-success?style=flat-square)
-![Type](https://img.shields.io/badge/Type-Study%20Project-orange?style=flat-square)
+O projeto surgiu originalmente como um **Sistema de Gerenciamento de Torneios**, sendo posteriormente refatorado para um sistema de guildas. A mudança mantém parte da estrutura e dos conceitos já desenvolvidos, mas introduz um novo domínio e novas regras de negócio envolvendo **aventureiros, guildas, missões, reputação e progressão**.
 
-A console-based tournament management system built in Java, developed as a hands-on study project to apply core Java concepts including Collections, Generics, Interfaces, and Object-Oriented Programming principles.
-
----
-
-> **Leia em Portugues** na secao abaixo.
+> **Projeto em desenvolvimento.**
+> As funcionalidades descritas no roadmap serão implementadas progressivamente durante os estudos.
 
 ---
 
-## Features
+## Objetivo
 
-- Register teams with name and sport modality
-- Add players to teams, preventing duplicates
-- Record match results with automatic scorekeeping
-- Display a ranked leaderboard sorted by points
-- Export the final ranking to a `.txt` file
-- Finalize tournaments with status control
+O sistema tem como objetivo permitir o gerenciamento de guildas e seus aventureiros.
 
-## Concepts Applied
+Cada guilda poderá possuir diversos membros com diferentes níveis e, futuramente, classes. As guildas poderão participar de missões cuja conclusão dependerá das características dos aventureiros selecionados.
 
-| Concept | Where it appears |
-|---|---|
-| `Set` | Preventing duplicate players per team and duplicate matches |
-| `Map` | Storing and updating each team's points |
-| `Generics` | Generic `Repository<T>` class for any model type |
-| `Bounded Generics` | `<T extends Player>` method to display player lists |
-| `Wildcards` | `List<? extends Team>` for flexible team listing |
-| `hashCode / equals` | Ensuring uniqueness of teams and players |
-| `Comparable` | Natural ordering of teams by name |
-| `Comparator` | Sorting the ranking by points (descending) |
-| `Interfaces` | `Rankable`, `Exportable`, `Statistical` |
-| `Default Methods` | Shared behavior defined directly in interfaces |
-| `Enum` | Sport modality and tournament status |
-| `Custom Exceptions` | Domain-specific error handling |
-| `LocalDate` | Match date tracking |
-| `BufferedWriter` | Exporting the ranking to a file |
+O desempenho nas missões concederá **reputação**, utilizada para determinar o progresso e o rank das guildas.
 
-## Project Structure
+---
 
+# Funcionalidades
+
+## Implementado / em desenvolvimento
+
+* Cadastro de guildas
+* Busca e listagem de guildas
+* Cadastro de aventureiros
+* Associação de aventureiros a guildas
+* Remoção de aventureiros
+* Prevenção de registros duplicados
+* Persistência dos dados utilizando MySQL
+* Acesso ao banco de dados utilizando JDBC
+* Organização entre entidades, regras de negócio e acesso aos dados
+* Tratamento de erros através de exceções personalizadas
+
+---
+
+# Regras de Negócio
+
+As regras abaixo definem o comportamento esperado do sistema conforme seu desenvolvimento.
+
+### Guildas
+
+**RN01 — Nome único**
+
+Uma guilda deve possuir um nome único dentro do sistema.
+
+**RN02 — Associação de aventureiros**
+
+Um aventureiro pode pertencer a apenas uma guilda por vez.
+
+**RN03 — Guilda existente**
+
+Um aventureiro somente pode ser associado a uma guilda previamente cadastrada.
+
+**RN04 — Mestre da guilda**
+
+Uma guilda poderá possuir um de seus aventureiros como mestre.
+
+O mestre obrigatoriamente deve pertencer à própria guilda.
+
+**RN05 — Mestre único**
+
+Uma guilda poderá possuir apenas um mestre por vez.
+
+---
+
+### Aventureiros
+
+**RN06 — Nível**
+
+Cada aventureiro possuirá um nível que representará parte de sua capacidade dentro da guilda.
+
+**RN07 — Classe**
+
+Os aventureiros poderão possuir diferentes classes, como:
+
+* Guerreiro
+* Mago
+* Arqueiro
+* Clérigo
+* Ladino
+
+As classes poderão futuramente ser utilizadas como requisitos para determinadas missões.
+
+---
+
+### Missões
+
+**RN08 — Associação da missão**
+
+Cada missão deve estar associada a uma guilda existente.
+
+**RN09 — Dificuldade**
+
+Cada missão possuirá uma dificuldade utilizada para determinar se a equipe enviada possui capacidade suficiente para concluí-la.
+
+**RN10 — Participantes**
+
+Uma missão poderá ser realizada por um conjunto de aventureiros pertencentes à guilda responsável.
+
+Apenas aventureiros pertencentes à guilda poderão participar da missão.
+
+**RN11 — Força da equipe**
+
+A força utilizada na missão será calculada a partir das características dos aventureiros selecionados.
+
+Inicialmente, o nível dos aventureiros será o principal fator utilizado no cálculo.
+
+**RN12 — Resultado**
+
+O sucesso ou fracasso de uma missão será determinado pelos dados da equipe e pelos requisitos da missão, evitando que o resultado dependa apenas de aleatoriedade.
+
+**RN13 — Missão concluída**
+
+Uma missão já concluída não poderá ser concluída novamente.
+
+---
+
+### Reputação e Rank
+
+**RN14 — Reputação**
+
+Guildas receberão reputação pela conclusão bem-sucedida de missões.
+
+**RN15 — Reputação não negativa**
+
+A reputação de uma guilda não poderá possuir valor negativo.
+
+**RN16 — Rank**
+
+O rank de uma guilda será determinado por sua reputação acumulada.
+
+Exemplo inicial de progressão:
+
+| Reputação | Rank     |
+| --------: | -------- |
+|    0 – 99 | Bronze   |
+| 100 – 249 | Prata    |
+| 250 – 499 | Ouro     |
+| 500 – 999 | Platina  |
+|     1000+ | Lendária |
+
+Os valores poderão ser alterados conforme o desenvolvimento das regras do sistema.
+
+---
+
+# Modelo do Domínio
+
+A estrutura planejada do sistema pode ser representada inicialmente como:
+
+```text
+Guilda
+│
+├── Aventureiros
+│     ├── Nível
+│     └── Classe
+│
+├── Mestre
+│
+├── Reputação
+│     └── Rank
+│
+└── Missões
+      ├── Dificuldade
+      ├── Participantes
+      ├── Status
+      └── Recompensa
 ```
+
+Uma guilda possui vários aventureiros, enquanto cada aventureiro pertence a uma única guilda.
+
+Futuramente, aventureiros poderão participar de várias missões e cada missão poderá possuir vários aventureiros, introduzindo um relacionamento **N:N**.
+
+---
+
+# Roadmap
+
+O desenvolvimento está dividido em etapas para que novas funcionalidades sejam adicionadas conforme novos conceitos são estudados.
+
+## Versão 1 — Guildas e Aventureiros
+
+* [x] Entidade Guilda
+* [x] Entidade Aventureiro
+* [x] Cadastro de guildas
+* [x] Cadastro de aventureiros
+* [x] Associação entre aventureiro e guilda
+* [x] Persistência utilizando JDBC e MySQL
+* [ ] Remoção de aventureiros
+* [ ] Nível dos aventureiros
+* [ ] Mestre da guilda
+
+---
+
+## Versão 2 — Sistema de Missões
+
+* [ ] Refatorar a entidade Missão
+* [ ] Associar missão a uma guilda
+* [ ] Dificuldade da missão
+* [ ] Status da missão
+* [ ] Recompensa em reputação
+* [ ] Cálculo de força
+* [ ] Determinação de sucesso ou fracasso
+* [ ] Atualização da reputação após uma missão
+
+---
+
+## Versão 3 — Progressão
+
+* [ ] Sistema de ranks das guildas
+* [ ] Classes de aventureiros
+* [ ] Requisitos específicos para missões
+* [ ] Missões limitadas por rank
+* [ ] Regras baseadas na composição da equipe
+
+---
+
+## Versão 4 — Equipes de Missão
+
+* [ ] Seleção dos aventureiros participantes
+* [ ] Relacionamento N:N entre aventureiros e missões
+* [ ] Tabela associativa `aventureiro_missao`
+* [ ] Cálculo da força apenas dos participantes
+* [ ] Validação dos requisitos da equipe
+
+Exemplo da relação planejada:
+
+```text
+AVENTUREIRO
+     N
+     │
+     │
+     N
+   MISSAO
+```
+
+No banco de dados:
+
+```text
+aventureiro_missao
+├── aventureiro_id
+└── missao_id
+```
+
+---
+
+## Versão 5 — Consistência e Transações
+
+* [ ] Utilização de transações JDBC
+* [ ] Atualização do status da missão
+* [ ] Atualização da reputação da guilda
+* [ ] Rollback em caso de falha
+* [ ] Testes das principais regras de negócio
+
+Uma conclusão de missão deverá ser tratada como uma única operação:
+
+```text
+Concluir missão
+      │
+      ├── Atualizar status
+      ├── Calcular resultado
+      └── Atualizar reputação
+              │
+              ▼
+         COMMIT / ROLLBACK
+```
+
+---
+
+## Futuro — JPA, Hibernate e Spring
+
+Após a conclusão e compreensão da implementação utilizando JDBC, o projeto poderá ser migrado gradualmente para tecnologias utilizadas no desenvolvimento de aplicações Java modernas.
+
+Planejado:
+
+* [ ] JPA
+* [ ] Hibernate
+* [ ] Spring Boot
+* [ ] Spring Data JPA
+* [ ] API REST
+* [ ] Endpoints para gerenciamento das entidades
+* [ ] Testes automatizados
+
+A intenção é realizar essa migração somente após consolidar os conceitos de persistência e acesso ao banco implementados manualmente com JDBC.
+
+---
+
+# Conceitos Aplicados
+
+| Conceito                    | Aplicação                                               |
+| --------------------------- | ------------------------------------------------------- |
+| Orientação a Objetos        | Modelagem de guildas, aventureiros e missões            |
+| Encapsulamento              | Controle do estado das entidades                        |
+| Collections                 | Gerenciamento de conjuntos e listas de entidades        |
+| `Set`                       | Controle de elementos que não devem se repetir          |
+| `List`                      | Manipulação e retorno de conjuntos ordenados de dados   |
+| `hashCode / equals`         | Identificação e comparação de entidades                 |
+| `Comparable` / `Comparator` | Ordenação de entidades e futuros rankings               |
+| Interfaces                  | Definição de contratos entre componentes                |
+| Enums                       | Representação de estados, classes, ranks e dificuldades |
+| Exceções personalizadas     | Tratamento de erros específicos do domínio              |
+| JDBC                        | Comunicação entre a aplicação Java e o banco            |
+| `PreparedStatement`         | Execução parametrizada de comandos SQL                  |
+| `ResultSet`                 | Leitura dos resultados retornados pelo banco            |
+| DAO                         | Separação da lógica de persistência                     |
+| Service                     | Centralização das regras de negócio                     |
+| MySQL                       | Persistência dos dados                                  |
+| Chaves estrangeiras         | Relacionamento entre as entidades                       |
+| `LocalDate`                 | Representação das datas das missões                     |
+| Streams                     | Cálculos e consultas sobre grupos de aventureiros       |
+
+---
+
+# Estrutura do Projeto
+
+A aplicação é organizada de forma a separar as responsabilidades entre as diferentes partes do sistema.
+
+```text
 src/
 ├── Main/
-│   └── ProgramMain.java         # Entry point, user menu
+│   └── ProgramMain.java
+│
 ├── model/
-│   ├── Player.java
-│   ├── Team.java
-│   └── Match.java
+│   ├── Guilda.java
+│   ├── Aventureiro.java
+│   └── Missao.java
+│
 ├── Service/
-│   └── TournamentService.java   # Business logic
-├── Repository/
-│   └── Repository.java          # Generic repository
-├── Interfaces/
-│   ├── Rankable.java
-│   ├── Exportable.java
-│   └── Statistical.java
-├── Enums/
-│   ├── Modality.java
-│   └── TournamentStatus.java
+│   └── GuildaService.java
+│
+├── dao/
+│   ├── GuildaDao.java
+│   ├── AventureiroDao.java
+│   └── MissaoDao.java
+│
 ├── Exception/
-│   ├── DuplicatePlayerException.java
-│   ├── DuplicateTeamException.java
-│   ├── IncompleteTeamException.java
-│   ├── TeamNotFoundException.java
-│   └── TournamentFinalizedException.java
-└── Util/
-    └── Exporter.java            # File export with BufferedWriter
-```
-
-## How to Run
-
-1. Clone the repository
-2. Open the project in your preferred IDE (IntelliJ IDEA or Eclipse recommended)
-3. Run `ProgramMain.java`
-4. Interact with the console menu
-
-**Requirements:** Java 17 or higher
-
-## Author
-
-Developed by **Juan** as part of a Java study curriculum covering Object-Oriented Programming and the Collections Framework.
-
----
----
-
-# Sistema de Gerenciamento de Torneios
-
-![Java](https://img.shields.io/badge/Java-17%2B-blue?style=flat-square&logo=openjdk)
-![Status](https://img.shields.io/badge/Status-Concluido-success?style=flat-square)
-![Tipo](https://img.shields.io/badge/Tipo-Projeto%20de%20Estudo-orange?style=flat-square)
-
-Sistema de gerenciamento de torneios via console desenvolvido em Java, criado como projeto pratico de estudos para aplicar conceitos fundamentais da linguagem, incluindo Collections, Generics, Interfaces e Orientacao a Objetos.
-
----
-
-## Funcionalidades
-
-- Cadastrar times com nome e modalidade esportiva
-- Adicionar jogadores aos times, impedindo duplicatas
-- Registrar resultados de partidas com pontuacao automatica
-- Exibir ranking ordenado por pontuacao
-- Exportar o ranking final para um arquivo `.txt`
-- Finalizar torneios com controle de status
-
-## Conceitos Aplicados
-
-| Conceito | Onde aparece |
-|---|---|
-| `Set` | Impedir jogadores e partidas duplicadas |
-| `Map` | Armazenar e atualizar a pontuacao de cada time |
-| `Generics` | Classe generica `Repositorio<T>` para qualquer modelo |
-| `Generics delimitados` | Metodo `<T extends Jogador>` para listar jogadores |
-| `Wildcards` | `List<? extends Time>` para listagem flexivel de times |
-| `hashCode / equals` | Garantir unicidade de times e jogadores |
-| `Comparable` | Ordenacao natural de times por nome |
-| `Comparator` | Ordenacao do ranking por pontos (decrescente) |
-| `Interfaces` | `Classificavel`, `Exportavel`, `Estatistico` |
-| `Default Methods` | Comportamento compartilhado definido nas interfaces |
-| `Enum` | Modalidade esportiva e status do torneio |
-| `Excecoes personalizadas` | Tratamento de erros especificos do dominio |
-| `LocalDate` | Registro da data das partidas |
-| `BufferedWriter` | Exportacao do ranking para arquivo |
-
-## Estrutura do Projeto
-
-```
-src/
-├── Main/
-│   └── ProgramMain.java         # Ponto de entrada, menu do usuario
-├── model/
-│   ├── Jogador.java
-│   ├── Time.java
-│   └── Partida.java
-├── Service/
-│   └── TorneioService.java      # Regras de negocio
-├── Repository/
-│   └── Repositorio.java         # Repositorio generico
-├── Interfaces/
-│   ├── Classificavel.java
-│   ├── Exportavel.java
-│   └── Estatistico.java
+│   └── ...
+│
 ├── Enums/
-│   ├── Modalidade.java
-│   
-├── Exeption/
-│   ├── JogadorDuplicadoException.java
-│   ├── TimeDuplicadoException.java
-│   ├── TimeIncompletoException.java
-│   ├── TimeNaoEncontradoException.java
-│   └── TorneioFinalizadoException.java
-└── Util/
-    └── Exportador.java          # Exportacao com BufferedWriter
+│   └── ...
+│
+└── db/
+    └── ...
 ```
 
-## Como Executar
+> A estrutura poderá ser alterada durante o desenvolvimento conforme novas responsabilidades forem adicionadas ao sistema.
 
-1. Clone o repositorio
-2. Abra o projeto na sua IDE (IntelliJ IDEA ou Eclipse recomendado)
-3. Execute o arquivo `ProgramMain.java`
-4. Interaja com o menu no console
+---
 
-**Requisitos:** Java 17 ou superior
+# Banco de Dados
+
+Atualmente, a persistência é realizada utilizando **MySQL + JDBC**.
+
+Modelo inicial:
+
+```text
+GUILDA
+├── id
+├── nome
+├── reputacao
+└── mestre_id
+
+
+AVENTUREIRO
+├── id
+├── nome
+├── nivel
+├── classe
+└── guilda_id
+
+
+MISSAO
+├── id
+├── nome
+├── dificuldade
+├── status
+├── recompensa
+└── guilda_id
+```
+
+Futuramente será adicionada a relação entre aventureiros e missões:
+
+```text
+AVENTUREIRO_MISSAO
+├── aventureiro_id
+└── missao_id
+```
+
+---
+
+# Evolução do Projeto
+
+O projeto foi iniciado originalmente como um sistema de gerenciamento de torneios.
+
+A primeira versão trabalhava com:
+
+```text
+Time → Jogadores → Partidas → Pontos → Ranking
+```
+
+Após a refatoração do domínio, a estrutura passou a representar:
+
+```text
+Guilda → Aventureiros → Missões → Reputação → Rank
+```
+
+A mudança tem como objetivo manter os conceitos já estudados e implementados enquanto permite a criação de regras de negócio mais variadas.
+
+Parte da estrutura original pôde ser reaproveitada:
+
+```text
+Time       → Guilda
+Jogador    → Aventureiro
+Partida    → Missão
+Pontos     → Reputação
+Ranking    → Rank / classificação de guildas
+```
+
+A partir dessa base, o projeto continuará evoluindo com novas regras específicas do domínio de guildas.
+
+---
+
+# Como Executar
+
+### Requisitos
+
+* Java 17 ou superior
+* MySQL
+* Driver JDBC do MySQL
+
+### Execução
+
+1. Clone o repositório.
+2. Configure a conexão com o banco de dados.
+3. Crie o banco e as tabelas necessárias.
+4. Abra o projeto na IDE de sua preferência.
+5. Execute `ProgramMain.java`.
+6. Utilize o menu através do console.
+
+---
+
+# Motivação
+
+Este projeto é utilizado como ambiente de estudo para aplicar conceitos além de exercícios isolados.
+
+A proposta é evoluir a mesma aplicação gradualmente, passando por diferentes etapas do desenvolvimento backend:
+
+```text
+Java
+  ↓
+Orientação a Objetos
+  ↓
+Collections
+  ↓
+Banco de Dados
+  ↓
+JDBC
+  ↓
+DAO
+  ↓
+Regras de Negócio
+  ↓
+Transações
+  ↓
+Testes
+  ↓
+JPA / Hibernate
+  ↓
+Spring
+  ↓
+API REST
+```
+
+Dessa forma, cada nova tecnologia é introduzida para resolver problemas que já existem no próprio sistema.
+
+---
 
 ## Autor
 
-Desenvolvido por **Juan** como parte de um curriculo de estudos em Java, cobrindo Orientacao a Objetos e o Collections Framework.
-=======
-# Tournament Management System
-
-![Java](https://img.shields.io/badge/Java-17%2B-blue?style=flat-square&logo=openjdk)
-![Status](https://img.shields.io/badge/Status-Complete-success?style=flat-square)
-![Type](https://img.shields.io/badge/Type-Study%20Project-orange?style=flat-square)
-
-A console-based tournament management system built in Java, developed as a hands-on study project to apply core Java concepts including Collections, Generics, Interfaces, and Object-Oriented Programming principles.
-
----
-
-> **Leia em Portugues** na secao abaixo.
-
----
-
-## Features
-
-- Register teams with name and sport modality
-- Add players to teams, preventing duplicates
-- Record match results with automatic scorekeeping
-- Display a ranked leaderboard sorted by points
-- Export the final ranking to a `.txt` file
-- Finalize tournaments with status control
-
-## Concepts Applied
-
-| Concept | Where it appears |
-|---|---|
-| `Set` | Preventing duplicate players per team and duplicate matches |
-| `Map` | Storing and updating each team's points |
-| `Generics` | Generic `Repository<T>` class for any model type |
-| `Bounded Generics` | `<T extends Player>` method to display player lists |
-| `Wildcards` | `List<? extends Team>` for flexible team listing |
-| `hashCode / equals` | Ensuring uniqueness of teams and players |
-| `Comparable` | Natural ordering of teams by name |
-| `Comparator` | Sorting the ranking by points (descending) |
-| `Interfaces` | `Rankable`, `Exportable`, `Statistical` |
-| `Default Methods` | Shared behavior defined directly in interfaces |
-| `Enum` | Sport modality and tournament status |
-| `Custom Exceptions` | Domain-specific error handling |
-| `LocalDate` | Match date tracking |
-| `BufferedWriter` | Exporting the ranking to a file |
-
-## Project Structure
-
-```
-src/
-├── Main/
-│   └── ProgramMain.java         # Entry point, user menu
-├── model/
-│   ├── Player.java
-│   ├── Team.java
-│   └── Match.java
-├── Service/
-│   └── TournamentService.java   # Business logic
-├── Repository/
-│   └── Repository.java          # Generic repository
-├── Interfaces/
-│   ├── Rankable.java
-│   ├── Exportable.java
-│   └── Statistical.java
-├── Enums/
-│   ├── Modality.java
-│   └── TournamentStatus.java
-├── Exception/
-│   ├── DuplicatePlayerException.java
-│   ├── DuplicateTeamException.java
-│   ├── IncompleteTeamException.java
-│   ├── TeamNotFoundException.java
-│   └── TournamentFinalizedException.java
-└── Util/
-    └── Exporter.java            # File export with BufferedWriter
-```
-
-## How to Run
-
-1. Clone the repository
-2. Open the project in your preferred IDE (IntelliJ IDEA or Eclipse recommended)
-3. Run `ProgramMain.java`
-4. Interact with the console menu
-
-**Requirements:** Java 17 or higher
-
-## Author
-
-Developed by **Juan** as part of a Java study curriculum covering Object-Oriented Programming and the Collections Framework.
-
----
----
-
-# Sistema de Gerenciamento de Torneios
-
-![Java](https://img.shields.io/badge/Java-17%2B-blue?style=flat-square&logo=openjdk)
-![Status](https://img.shields.io/badge/Status-Concluido-success?style=flat-square)
-![Tipo](https://img.shields.io/badge/Tipo-Projeto%20de%20Estudo-orange?style=flat-square)
-
-Sistema de gerenciamento de torneios via console desenvolvido em Java, criado como projeto pratico de estudos para aplicar conceitos fundamentais da linguagem, incluindo Collections, Generics, Interfaces e Orientacao a Objetos.
-
----
-
-## Funcionalidades
-
-- Cadastrar times com nome e modalidade esportiva
-- Adicionar jogadores aos times, impedindo duplicatas
-- Registrar resultados de partidas com pontuacao automatica
-- Exibir ranking ordenado por pontuacao
-- Exportar o ranking final para um arquivo `.txt`
-- Finalizar torneios com controle de status
-
-## Conceitos Aplicados
-
-| Conceito | Onde aparece |
-|---|---|
-| `Set` | Impedir jogadores e partidas duplicadas |
-| `Map` | Armazenar e atualizar a pontuacao de cada time |
-| `Generics` | Classe generica `Repositorio<T>` para qualquer modelo |
-| `Generics delimitados` | Metodo `<T extends Jogador>` para listar jogadores |
-| `Wildcards` | `List<? extends Time>` para listagem flexivel de times |
-| `hashCode / equals` | Garantir unicidade de times e jogadores |
-| `Comparable` | Ordenacao natural de times por nome |
-| `Comparator` | Ordenacao do ranking por pontos (decrescente) |
-| `Interfaces` | `Classificavel`, `Exportavel`, `Estatistico` |
-| `Default Methods` | Comportamento compartilhado definido nas interfaces |
-| `Enum` | Modalidade esportiva e status do torneio |
-| `Excecoes personalizadas` | Tratamento de erros especificos do dominio |
-| `LocalDate` | Registro da data das partidas |
-| `BufferedWriter` | Exportacao do ranking para arquivo |
-
-## Estrutura do Projeto
-
-```
-src/
-├── Main/
-│   └── ProgramMain.java         # Ponto de entrada, menu do usuario
-├── model/
-│   ├── Jogador.java
-│   ├── Time.java
-│   └── Partida.java
-├── Service/
-│   └── TorneioService.java      # Regras de negocio
-├── Repository/
-│   └── Repositorio.java         # Repositorio generico
-├── Interfaces/
-│   ├── Classificavel.java
-│   ├── Exportavel.java
-│   └── Estatistico.java
-├── Enums/
-│   ├── Modalidade.java
-│   
-├── Exeption/
-│   ├── JogadorDuplicadoException.java
-│   ├── TimeDuplicadoException.java
-│   ├── TimeIncompletoException.java
-│   ├── TimeNaoEncontradoException.java
-│   └── TorneioFinalizadoException.java
-└── Util/
-    └── Exportador.java          # Exportacao com BufferedWriter
-```
-
-## Como Executar
-
-1. Clone o repositorio
-2. Abra o projeto na sua IDE (IntelliJ IDEA ou Eclipse recomendado)
-3. Execute o arquivo `ProgramMain.java`
-4. Interaja com o menu no console
-
-**Requisitos:** Java 17 ou superior
-
-## Autor
-
-Desenvolvido por **Juan** como parte de um curriculo de estudos em Java, cobrindo Orientacao a Objetos e o Collections Framework.
->>>>>>> e2b5f0c7e0100c53f397524f9cc9193044a10f09
+Desenvolvido por **Juan** como projeto de estudo em Java e Engenharia de Software.
