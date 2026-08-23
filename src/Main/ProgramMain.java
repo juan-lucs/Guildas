@@ -5,12 +5,13 @@ import Service.*;
 import db.dbexception;
 import enums.Modalidade;
 import exeption.*;
-import model.Entity.Jogador;
-import model.Entity.Time;
+import model.Entity.Aventureiro;
+import model.Entity.Guilda;
 
 
 import java.sql.SQLException;
 
+import java.Guilda.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -20,20 +21,18 @@ public class ProgramMain {
         var service = new TorneioService();
 
         System.out.println("╔══════════════════════════════╗");
-        System.out.println("║   SISTEMA DE TORNEIOS !!     ║");
+        System.out.println("║   SISTEMA DE GUILDAS !!     ║");
         System.out.println("╚══════════════════════════════╝");
 
         var rodando = true;
 
         while (rodando) {
             System.out.println("\n=== MENU ===");
-            System.out.println("1. Cadastrar time");
-            System.out.println("2. Adicionar jogador a um time");
-            System.out.println("3. Registrar partida");
+            System.out.println("1. Cadastrar Guilda");
+            System.out.println("2. Adicionar Aventureiro a um Guilda");
+            System.out.println("3. Registrar missão");
             System.out.println("4. Ver ranking");
-            System.out.println("5. Exibir resumo do torneio");
             System.out.println("6. Exportar ranking para arquivo");
-            System.out.println("7. Finalizar torneio");
             System.out.println("0. Sair");
             System.out.print("\nEscolha uma opção: ");
 
@@ -49,9 +48,9 @@ public class ProgramMain {
             switch (opcao) {
 
                 case 1 -> {
-                    // ── CADASTRAR TIME ──
-                    System.out.print("Nome do time : ");
-                    String nomeTime = sc.nextLine().trim();
+                    // ── CADASTRAR Guilda ──
+                    System.out.print("Nome do Guilda : ");
+                    String nomeGuilda = sc.nextLine().trim();
 
                     System.out.println("Modalidade:");
                     Modalidade[] arrayModalidades = Modalidade.values();
@@ -62,9 +61,9 @@ public class ProgramMain {
                     try {
                         int idxModalidade = Integer.parseInt(sc.nextLine().trim()) - 1;
                         Modalidade modalidade = arrayModalidades[idxModalidade];
-                        service.cadastrarTime(nomeTime, modalidade);
+                        service.cadastrarGuilda(nomeGuilda, modalidade);
                         sc.nextLine();
-                    } catch (TimeDuplicadoException | dbexception e) {
+                    } catch (GuildaDuplicadoException | dbexception e) {
                         System.out.println(e.getMessage());
                     } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
                         System.out.println("Modalidade inválida!");
@@ -72,65 +71,65 @@ public class ProgramMain {
                 }
 
                 case 2 -> {
-                    // ── ADICIONAR JOGADOR ──
-                    System.out.print("Nome do time: ");
-                    String nomeTime = sc.nextLine().trim();
+                    // ── ADICIONAR Aventureiro ──
+                    System.out.print("Nome do Guilda: ");
+                    String nomeGuilda = sc.nextLine().trim();
 
-                    System.out.print("Nome do jogador: ");
-                    String nomeJogador = sc.nextLine().trim();
+                    System.out.print("Nome do Aventureiro: ");
+                    String nomeAventureiro = sc.nextLine().trim();
 
-                    System.out.print("Posição do jogador: ");
+                    System.out.print("Posição do Aventureiro: ");
                     String posicao = sc.nextLine().trim();
 
-                    System.out.print("Idade do jogador: ");
+                    System.out.print("Idade do Aventureiro: ");
                     try {
                         int idade = sc.nextInt();
-                        service.adicionarJogadorTime(nomeTime, nomeJogador, idade, posicao);
+                        service.adicionarAventureiroGuilda(nomeGuilda, nomeAventureiro, idade, posicao);
                         sc.nextLine();
-                    } catch (JogadorDuplicadoException | TimeNaoEncontradoException | dbexception e) {
+                    } catch (AventureiroDuplicadoException | GuildaNaoEncontradoException | dbexception e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Idade inválida!");
                     }
                 }
-//
-//                case 3 -> {
-//                    // ── REGISTRAR PARTIDA ──
-//                    System.out.print("Nome do time 1: ");
-//                    String time1 = sc.nextLine().trim();
-//
-//                    System.out.print("Nome do time 2: ");
-//                    String time2 = sc.nextLine().trim();
-//
-//                    try {
-//                        System.out.print("Ano da partida: ");
-//                        int ano = Integer.parseInt(sc.nextLine().trim());
-//                        System.out.print("Mês da partida: ");
-//                        int mes = Integer.parseInt(sc.nextLine().trim());
-//                        System.out.print("Dia da partida: ");
-//                        int dia = Integer.parseInt(sc.nextLine().trim());
-//                        LocalDate data = LocalDate.of(ano, mes, dia);
-//
-//                        System.out.print("Pontos do " + time1 + ": ");
-//                        int pontos1 = Integer.parseInt(sc.nextLine().trim());
-//
-//                        System.out.print("Pontos do " + time2 + ": ");
-//                        int pontos2 = Integer.parseInt(sc.nextLine().trim());
-//
-//                        service.registrarPartida(time1, time2, data, pontos1, pontos2);
-//
-//                    } catch (TimeNaoEncontradoException | TimeIncompletoException | TorneioFinalizadoException e) {
-//                        System.out.println(e.getMessage());
-//                    } catch (NumberFormatException e) {
-//                        System.out.println("Valor inválido!");
-//                    }
-//                }
+
+                case 3 -> {
+                    // ── REGISTRAR missão ──
+                    System.out.print("Nome do Guilda 1: ");
+                    String Guilda1 = sc.nextLine().trim();
+
+                    System.out.print("Nome do Guilda 2: ");
+                    String Guilda2 = sc.nextLine().trim();
+
+                    try {
+                        System.out.print("Ano da missão: ");
+                        int ano = Integer.parseInt(sc.nextLine().trim());
+                        System.out.print("Mês da missão: ");
+                        int mes = Integer.parseInt(sc.nextLine().trim());
+                        System.out.print("Dia da missão: ");
+                        int dia = Integer.parseInt(sc.nextLine().trim());
+                        var data = LocalDate.of(ano, mes, dia);
+
+                        System.out.print("Pontos do " + Guilda1 + ": ");
+                        int pontos1 = Integer.parseInt(sc.nextLine().trim());
+
+                        System.out.print("Pontos do " + Guilda2 + ": ");
+                        int pontos2 = Integer.parseInt(sc.nextLine().trim());
+
+                        service.registrarmissão(Guilda1, Guilda2, data, pontos1, pontos2);
+
+                    } catch (GuildaNaoEncontradoException | GuildaIncompletoException | TorneioFinalizadoException e) {
+                        System.out.println(e.getMessage());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Valor inválido!");
+                    }
+                }
 //
 //                case 4 -> {
 //                    // ── VER RANKING ──
 //                    var ranking = service.rankingTorneio();
 //                    if (ranking.isEmpty()) {
-//                        System.out.println("Nenhum time cadastrado ainda.");
+//                        System.out.println("Nenhum Guilda cadastrado ainda.");
 //                    } else {
 //                        System.out.println("\n=== RANKING ===");
 //                        int pos = 1;
@@ -140,16 +139,11 @@ public class ProgramMain {
 //                    }
 //                }
 //
-//                case 5 -> {
-//                    // ── RESUMO ──
-//                    service.resumoTorneio();
-//                }
-//
 //                case 6 -> {
 //                    // ── EXPORTAR RANKING ──
 //                    var ranking = service.rankingTorneio();
 //                    if (ranking.isEmpty()) {
-//                        System.out.println("Nenhuma partida registrada ainda. Não há ranking para exportar.");
+//                        System.out.println("Nenhuma missão registrada ainda. Não há ranking para exportar.");
 //                    } else {
 //                        try {
 //                            Exportador.exportarRanking(ranking);
@@ -160,15 +154,7 @@ public class ProgramMain {
 //                    }
 //                }
 //
-//                case 7 -> {
-//                    // FINALIZAR
-//                    try {
-//                        service.finalizarTorneio();
-//                    } catch (TorneioFinalizadoException e) {
-//                        System.out.println(e.getMessage());
-//                    }
-//                }
-
+//
 
                 case 0 -> {
                     System.out.println("Encerrando o sistema.....");

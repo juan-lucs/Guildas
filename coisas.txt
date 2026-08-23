@@ -1,0 +1,1 @@
+docker run -d --name banco-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=GUILDA -v /var/lib/mysql mysql:8.4
