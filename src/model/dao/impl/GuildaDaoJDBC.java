@@ -5,6 +5,7 @@ import db.dbexception;
 import exeption.AventureiroDuplicadoException;
 import exeption.guildaNaoEncontradaException;
 import model.Entity.Aventureiro;
+import model.Entity.AvtrMestre;
 import model.Entity.Guilda;
 import model.dao.GuildaDao;
 
@@ -20,16 +21,21 @@ public class GuildaDaoJDBC implements GuildaDao {
     }
 
     @Override
-    public void insert(String nome, int level) {
+    public void insert(String nome, int level, AvtrMestre mestre) {
         PreparedStatement st = null;
         try {
             st = conn.prepareStatement("INSERT INTO guilda " +
-                    "(name,level) " +
+                    "(name,level, mestre_id) " +
                     "VALUES " +
                     "(? , ?)",
                     st.RETURN_GENERATED_KEYS);
             st.setString(1, nome);
             st.setInt(2, level);
+            if (mestre.getId() != null) {
+                st.setLong(3, mestre.getId());
+            } else {
+                st.setNull(3, Types.BIGINT);
+            }
             // reputacao é DEFAULT = 0
 
             int linhasafetadas = st.executeUpdate();

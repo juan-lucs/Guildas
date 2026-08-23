@@ -1,5 +1,5 @@
 package model.Entity;
 
-public class avtrMestre extends Aventureiro{
+public class AvtrMestre extends Aventureiro{
     // bah todos os poderes futuros do MestreAventureiro
 }

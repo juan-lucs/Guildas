@@ -9,7 +9,7 @@ public class Guilda implements Serializable {
     private Long id;
     private String nome;
     private int nivel;
-    private avtrMestre mestre;
+    private AvtrMestre mestre;
     private int reputacao;
     private Set<Aventureiro> aventureiros = new HashSet<>();
 
@@ -52,7 +52,7 @@ public class Guilda implements Serializable {
     }
 
     public void setMestre(Aventureiro mestre) {
-        this.mestre = (avtrMestre) mestre;
+        this.mestre = (AvtrMestre) mestre;
     }
 
     public int getReputacao() {

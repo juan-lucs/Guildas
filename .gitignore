@@ -23,4 +23,4 @@ Thumbs.db
 *.temp
 
 src/db.properties
-src/coisas.txt
+coisas.txt
