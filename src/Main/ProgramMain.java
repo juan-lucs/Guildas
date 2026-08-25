@@ -11,7 +11,9 @@ import model.Entity.Guilda;
 
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ProgramMain {
@@ -59,15 +61,31 @@ public class ProgramMain {
                         String escolha = sc.nextLine();
 
                         if (!escolha.equalsIgnoreCase("y") && !escolha.equalsIgnoreCase("n")) {throw new EscolhaerradaException("Escolha incorreta!");}
-                        else if (escolha == "y") {
-                            mestre = criarMestreGuilda();
-                        }
-                        service.cadastrarGuilda(nomeGuilda, level, mestre);
+                        else if (escolha.equalsIgnoreCase("y")) {
 
-                    } catch (GuildaDuplicadoException | dbexception | EscolhaerradaException e) {
+                            System.out.print("Nome do Aventureiro: ");
+                            String nomeAventureiro = sc.nextLine().trim();
+
+                            System.out.print("Nível do Aventureiro: ");
+                            int nivel = sc.nextInt();
+                            sc.nextLine();
+                            System.out.print("Classe do Aventureiro:\n");
+                            Classes[] classes = Classes.values();
+                            for (var e : classes) {
+                                System.out.println(e);
+                            }
+                            Classes classe = Classes.valueOf(sc.nextLine().trim().toUpperCase());
+                            mestre = TorneioService.criarMestreGuilda(nomeAventureiro, nivel, classe);
+                            service.cadastrarGuilda(nomeGuilda, level, mestre);
+                        } else {
+                            service.cadastrarGuilda(nomeGuilda, level, mestre);
+                        }
+                    } catch (NivelMinimoMestreException | GuildaDuplicadoException | dbexception | EscolhaerradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Level invalido!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Escolha uma classe certa!");
                     }
                 }
 
@@ -170,10 +188,5 @@ public class ProgramMain {
         }
 
         sc.close();
-    }
-
-    private static AvtrMestre criarMestreGuilda() {
-        System.out.println("Aí tu me fode pae");
-        return null;
     }
 }

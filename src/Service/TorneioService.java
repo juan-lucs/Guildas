@@ -2,6 +2,7 @@ package Service;
 
 import Interfaces.*;
 import db.dbexception;
+import enums.Classes;
 import model.Entity.AvtrMestre;
 import model.Entity.Guilda;
 import exeption.*;
@@ -34,7 +35,15 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         }
         System.out.println("Guilda '" + nomeGuilda + "' cadastrada com sucesso!");
     }
-//    // ADICIONAR JOGADOR AO Guilda
+
+    public static AvtrMestre criarMestreGuilda(String n, int nivel, Classes classe) throws NivelMinimoMestreException{
+        final int minimoDeNivel = 50;
+        if (nivel < minimoDeNivel) {
+            throw new NivelMinimoMestreException("O mestre deve possuir nível 50 ou maior");
+        }
+        return new AvtrMestre(n, nivel, classe);
+    }
+//    // ADICIONAR Aventureirio A Guilda
 //    public void adicionarJogadorGuilda(String nomeGuilda, String nomej , int idade, String posicao) throws GuildaNaoEncontradoException, JogadorDuplicadoException, dbexception {
 //        Guilda Guilda = GuildaDao.findByNome(nomeGuilda); // Se não existir ele vai passar reto com o exception
 //        var jogador = new Jogador(nomej, idade, posicao);
