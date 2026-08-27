@@ -9,7 +9,8 @@ import model.Entity.Guilda;
 import java.util.List;
 
 public interface GuildaDao {
-    void insert(String nomeGuilda, int level, AvtrMestre mestre);
+    void insert(Guilda arg);
+    void update(Guilda arg);
     void updateReputacao(Guilda arg);
     Guilda findByNome(String nome) throws guildaNaoEncontradaException;
     List<Guilda> findAll();

@@ -8,4 +8,8 @@ public class AvtrMestre extends Aventureiro{
     public AvtrMestre(String nome, int nivel, Classes classe) {
         super(nome, nivel, classe);
     }
+
+    public AvtrMestre( String nome, int nivel, Classes classe, Guilda guilda) {
+        super(nome, nivel, classe, guilda);
+    }
 }

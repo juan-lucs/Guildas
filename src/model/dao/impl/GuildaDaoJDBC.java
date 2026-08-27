@@ -16,26 +16,21 @@ import java.util.List;
 public class GuildaDaoJDBC implements GuildaDao {
     private Connection conn;
 
-    public GuildaDaoJDBC(Connection c) {
-        this.conn = c;
+    public GuildaDaoJDBC(Connection connection) {
+        this.conn = connection;
     }
 
     @Override
-    public void insert(String nome, int level, AvtrMestre mestre) {
+    public void insert(Guilda arg) {
         PreparedStatement st = null;
         try {
             st = conn.prepareStatement("INSERT INTO guilda " +
-                    "(name,level, mestre_id) " +
+                    "(name,level) " +
                     "VALUES " +
                     "(? , ?)",
                     st.RETURN_GENERATED_KEYS);
-            st.setString(1, nome);
-            st.setInt(2, level);
-            if (mestre.getId() != null) {
-                st.setLong(3, mestre.getId());
-            } else {
-                st.setNull(3, Types.BIGINT);
-            }
+            st.setString(1, arg.getNome());
+            st.setInt(2, arg.getLevel());
             // reputacao é DEFAULT = 0
 
             int linhasafetadas = st.executeUpdate();
@@ -48,6 +43,31 @@ public class GuildaDaoJDBC implements GuildaDao {
             bancodados.closeStatement(st);
         }
     }
+
+    @Override
+    public void update(Guilda arg) {
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement(
+                    "UPDATE guilda " +
+                            "SET name = ? , level = ?, mestre_id = ?"
+                            + " WHERE id = ?"
+            );
+            st.setString(1, arg.getNome());
+            st.setInt(2, arg.getLevel());
+            st.setLong(3, arg.getMestre().getId());
+            st.setLong(4, arg.getId());
+            int linhas = st.executeUpdate();
+            if (linhas == 0) {
+                throw new dbexception("Nenhuma guilda foi atualizada.");
+            }
+        } catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+        }
+    }
+
 
     @Override
     public void updateReputacao(Guilda arg) {

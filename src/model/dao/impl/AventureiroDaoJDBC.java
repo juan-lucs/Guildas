@@ -113,26 +113,26 @@ public class AventureiroDaoJDBC implements AventureiroDao {
 
     }
 
-    @Override
-    public void adicionarAoTime(Aventureiro aventureiro, Guilda guilda) {
-
-        PreparedStatement st = null;
-
-        try {
-            st = conn.prepareStatement(
-                    "UPDATE aventureiro SET guilda_id = ? WHERE id = ?"
-            );
-
-            st.setLong(1, guilda.getId());
-            st.setLong(2, aventureiro.getId());
-
-            st.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
-        } finally {
-            bancodados.closeStatement(st);
-        }
-    }
+//    @Override
+//    public void adicionarAGuilda(Aventureiro aventureiro, Guilda guilda) {
+//
+//        PreparedStatement st = null;
+//
+//        try {
+//            st = conn.prepareStatement(
+//                    "UPDATE aventureiro SET guilda_id = ? WHERE id = ?"
+//            );
+//
+//            st.setLong(1, guilda.getId());
+//            st.setLong(2, aventureiro.getId());
+//
+//            st.executeUpdate();
+//
+//        } catch (SQLException e) {
+//            throw new dbexception(e.getMessage());
+//        } finally {
+//            bancodados.closeStatement(st);
+//        }
+//    }
 
 }

@@ -23,6 +23,13 @@ public class Aventureiro implements Comparable<Aventureiro>, Serializable {
         this.nivel = nivel;
     }
 
+    public Aventureiro(String nome, int nivel, Classes classe, Guilda guilda) {
+        this.nome = nome;
+        this.nivel = nivel;
+        this.classe = classe;
+        this.guilda = guilda;
+    }
+
     public Aventureiro(Long id, String nome, int nivel, Classes classe, Guilda guilda) {
         this.id = id;
         this.nome = nome;

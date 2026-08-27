@@ -8,7 +8,7 @@ import java.util.Set;
 public class Guilda implements Serializable {
     private Long id;
     private String nome;
-    private int nivel;
+    private int level;
     private AvtrMestre mestre;
     private int reputacao;
     private Set<Aventureiro> aventureiros = new HashSet<>();
@@ -16,10 +16,15 @@ public class Guilda implements Serializable {
     public Guilda() {
     }
 
-    public Guilda(Long id, String nome, int nivel) {
+    public Guilda(Long id, String nome, int level) {
         this.id = id;
         this.nome = nome;
-        this.nivel = nivel;
+        this.level = level;
+    }
+
+    public Guilda(String nome, int level) {
+        this.nome = nome;
+        this.level = level;
     }
 
     public Guilda(Long id, String nome) {
@@ -31,12 +36,11 @@ public class Guilda implements Serializable {
         this.aventureiros.add(aventureiro);
     }
 
-    public int getNivel() {
-        return nivel;
+    public int getLevel() {
+        return level;
     }
-
-    public void setNivel(int nivel) {
-        this.nivel = nivel;
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public String getNome() {
@@ -47,12 +51,12 @@ public class Guilda implements Serializable {
         this.nome = nome;
     }
 
-    public Aventureiro getMestre() {
+    public AvtrMestre getMestre() {
         return mestre;
     }
 
-    public void setMestre(Aventureiro mestre) {
-        this.mestre = (AvtrMestre) mestre;
+    public void setMestre(AvtrMestre mestre) {
+        this.mestre = mestre;
     }
 
     public int getReputacao() {
@@ -89,4 +93,5 @@ public class Guilda implements Serializable {
     public int hashCode() {
         return Objects.hashCode(getNome());
     }
+
 }

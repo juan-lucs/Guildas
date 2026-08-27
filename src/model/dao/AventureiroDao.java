@@ -10,7 +10,7 @@ public interface AventureiroDao {
     void update(Aventureiro arg);
     Aventureiro findById(Integer id);
     List<Aventureiro> findAllOnATeam(Guilda guilda);
-    void adicionarAoTime(Aventureiro Aventureiro, Guilda guilda);
+//    void adicionarAGuilda(Aventureiro Aventureiro, Guilda guilda);
 }
 
 

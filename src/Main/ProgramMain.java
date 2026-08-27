@@ -50,13 +50,13 @@ public class ProgramMain {
 
                 case 1 -> {
                     // ── CADASTRAR Guilda ──
-                    AvtrMestre mestre = null;
                     System.out.print("Nome do Guilda : ");
                     String nomeGuilda = sc.nextLine().trim();
                     System.out.println("Level da Guilda: ");
                     try {
                         int level = sc.nextInt();
                         sc.nextLine();
+                        service.cadastrarGuilda(nomeGuilda, level);
                         System.out.println("Sua Guilda terá um Aventureiro mestre? y/n");
                         String escolha = sc.nextLine();
 
@@ -75,12 +75,9 @@ public class ProgramMain {
                                 System.out.println(e);
                             }
                             Classes classe = Classes.valueOf(sc.nextLine().trim().toUpperCase());
-                            mestre = TorneioService.criarMestreGuilda(nomeAventureiro, nivel, classe);
-                            service.cadastrarGuilda(nomeGuilda, level, mestre);
-                        } else {
-                            service.cadastrarGuilda(nomeGuilda, level, mestre);
+                            service.criarMestreGuilda(nomeAventureiro, nivel, classe, nomeGuilda);
                         }
-                    } catch (NivelMinimoMestreException | GuildaDuplicadoException | dbexception | EscolhaerradaException e) {
+                    } catch (NivelMinimoMestreException | GuildaDuplicadoException | dbexception | EscolhaerradaException | guildaNaoEncontradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Level invalido!");

@@ -4,8 +4,8 @@ import Interfaces.*;
 import db.dbexception;
 import enums.Classes;
 import model.Entity.AvtrMestre;
-import model.Entity.Guilda;
 import exeption.*;
+import model.Entity.Guilda;
 import model.dao.AventureiroDao;
 import model.dao.DaoFactory;
 import model.dao.GuildaDao;
@@ -15,9 +15,9 @@ import java.util.*;
 
 public class TorneioService implements Exportavel, Classificavel, Estatistico {
 
-    AventureiroDao avntDao = DaoFactory.createAventureiroDao();
-    GuildaDao GuildaDao = DaoFactory.createGuildaDao();
-    MissaoDao PartidaDao = DaoFactory.createMissaoDao();
+    final AventureiroDao avntDao = DaoFactory.createAventureiroDao();
+    final GuildaDao guildaDao = DaoFactory.createGuildaDao();
+    final MissaoDao missaoDao = DaoFactory.createMissaoDao();
 
 //    private Map<Guilda, Integer> pontosDeCadaGuilda = new HashMap<>();
     //private final Repositorio<Guilda> repositorio = new Repositorio<>();
@@ -25,23 +25,29 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
 //    private StatusTorneio status = StatusTorneio.ABERTO;
 
     // CADASTRAR Guilda
-    public void cadastrarGuilda(String nomeGuilda, int level, AvtrMestre mestre) throws GuildaDuplicadoException, dbexception, EscolhaerradaException {
+    public void cadastrarGuilda(String nomeGuilda, int level) throws GuildaDuplicadoException, dbexception{
 
-        List<String> Guildas = GuildaDao.findAllNomes();
+        List<String> Guildas = guildaDao.findAllNomes();
         for (String Guilda : Guildas) {
             if (Guilda.equalsIgnoreCase(nomeGuilda)) {
                 throw new GuildaDuplicadoException("Já existe um Guilda com o nome '" + nomeGuilda + "'!");
             }
         }
+        var guilda = new Guilda(nomeGuilda, level);
+        guildaDao.insert(guilda);
         System.out.println("Guilda '" + nomeGuilda + "' cadastrada com sucesso!");
     }
 
-    public static AvtrMestre criarMestreGuilda(String n, int nivel, Classes classe) throws NivelMinimoMestreException{
+    public void criarMestreGuilda(String n, int nivel, Classes classe, String nomeGuilda) throws NivelMinimoMestreException, guildaNaoEncontradaException {
         final int minimoDeNivel = 50;
         if (nivel < minimoDeNivel) {
             throw new NivelMinimoMestreException("O mestre deve possuir nível 50 ou maior");
         }
-        return new AvtrMestre(n, nivel, classe);
+        var guilda = guildaDao.findByNome(nomeGuilda);
+        var aven = new AvtrMestre(n, nivel, classe, guilda);
+        avntDao.insert(aven); guilda.setMestre(aven);
+        guildaDao.update(guilda);
+        System.out.println("Mestre cadastrado com sucesso");
     }
 //    // ADICIONAR Aventureirio A Guilda
 //    public void adicionarJogadorGuilda(String nomeGuilda, String nomej , int idade, String posicao) throws GuildaNaoEncontradoException, JogadorDuplicadoException, dbexception {
