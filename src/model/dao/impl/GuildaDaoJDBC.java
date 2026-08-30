@@ -129,8 +129,8 @@ public class GuildaDaoJDBC implements GuildaDao {
         try {
             st = conn.prepareStatement("SELECT * " +
                     "FROM aventureiro " +
-                    "WHERE id = ? AND guilda_id = ?");
-            st.setLong(1, a.getId());
+                    "WHERE name = ? AND guilda_id = ?");
+            st.setString(1, a.getNome());
             st.setLong(2, g.getId());
             rs = st.executeQuery();
 

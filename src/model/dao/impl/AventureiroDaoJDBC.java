@@ -38,8 +38,7 @@ public class AventureiroDaoJDBC implements AventureiroDao {
             if (linhasafetadas > 0) {
                 ResultSet rs = st.getGeneratedKeys();
                     if (rs.next()) {
-                    var id = rs.getLong(1);
-                    arg.setId(id);
+                        arg.setId(rs.getLong(1));
                     }
                 bancodados.closeResultSet(rs);
                 }   else {
@@ -83,7 +82,7 @@ public class AventureiroDaoJDBC implements AventureiroDao {
     }
 
     @Override
-    public List<Aventureiro> findAllOnATeam(Guilda guilda) {
+    public List<Aventureiro> findAllOnAGuilda(Guilda guilda) {
         ResultSet rs = null;
         PreparedStatement st = null;
         try {

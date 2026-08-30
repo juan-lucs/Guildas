@@ -51,15 +51,14 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         System.out.println("Mestre cadastrado com sucesso");
     }
 
-    // ADICIONAR Aventureirio A Guilda
+    // ADICIONAR Aventureiro A Guilda
     public void adicionarAventureiroGuilda(String nomeGuilda, String nomej , int nivel, Classes classe) throws dbexception, guildaNaoEncontradaException, AventureiroDuplicadoException {
         Guilda guilda = guildaDao.findByNome(nomeGuilda); // Se não existir ele vai passar reto com o exception
         var aven = new Aventureiro(nomej,nivel, classe);
-        avntDao.insert(aven);
         if (!guildaDao.pesquisarAventureiro(guilda, aven)) {
             aven.setGuilda(guilda);
         }
-        avntDao.update(aven);
+        avntDao.insert(aven);
         System.out.println("Jogador '" + aven.getNome() + "' adicionado ao Guilda '" + guilda.getNome() + "' com sucesso!");
     }
 //
