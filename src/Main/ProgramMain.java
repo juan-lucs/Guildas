@@ -86,28 +86,33 @@ public class ProgramMain {
                     }
                 }
 
-//                case 2 -> {
-//                    // ── ADICIONAR Aventureiro ──
-//                    System.out.print("Nome do Guilda: ");
-//                    String nomeGuilda = sc.nextLine().trim();
-//
-//                    System.out.print("Nome do Aventureiro: ");
-//                    String nomeAventureiro = sc.nextLine().trim();
-//
-//                    System.out.print("Posição do Aventureiro: ");
-//                    String posicao = sc.nextLine().trim();
-//
-//                    System.out.print("Idade do Aventureiro: ");
-//                    try {
-//                        int idade = sc.nextInt();
-//                        service.adicionarAventureiroGuilda(nomeGuilda, nomeAventureiro, idade, posicao);
-//                        sc.nextLine();
-//                    } catch (AventureiroDuplicadoException | GuildaNaoEncontradoException | dbexception e) {
-//                        System.out.println(e.getMessage());
-//                    } catch (InputMismatchException e) {
-//                        System.out.println("Idade inválida!");
-//                    }
-//                }
+                case 2 -> {
+                    // ── ADICIONAR Aventureiro ──
+                    System.out.print("Nome do Guilda: ");
+                    String nomeGuilda = sc.nextLine().trim();
+
+                    System.out.print("Nome do Aventureiro: ");
+                    String nomeAventureiro = sc.nextLine().trim();
+
+                    Classes[] classes = Classes.values();
+                    for (var e : classes) {
+                        System.out.println(e);
+                    }
+                    try {
+                        System.out.print("Classe do Aventureiro: ");
+                        String classe = sc.nextLine().trim().toUpperCase();
+                        System.out.print("Nivel do Aventureiro: ");
+                        int idade = sc.nextInt();
+                        service.adicionarAventureiroGuilda(nomeGuilda, nomeAventureiro, idade, Classes.valueOf(classe));
+                        sc.nextLine();
+                    } catch (AventureiroDuplicadoException | guildaNaoEncontradaException | dbexception e) {
+                        System.out.println(e.getMessage());
+                    } catch (InputMismatchException e) {
+                        System.out.println("Idade inválida!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Escolha uma classe certa!");
+                    }
+                }
 //
 //                case 3 -> {
 //                    // ── REGISTRAR missão ──

@@ -3,6 +3,7 @@ package Service;
 import Interfaces.*;
 import db.dbexception;
 import enums.Classes;
+import model.Entity.Aventureiro;
 import model.Entity.AvtrMestre;
 import exeption.*;
 import model.Entity.Guilda;
@@ -49,17 +50,18 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         guildaDao.update(guilda);
         System.out.println("Mestre cadastrado com sucesso");
     }
-//    // ADICIONAR Aventureirio A Guilda
-//    public void adicionarJogadorGuilda(String nomeGuilda, String nomej , int idade, String posicao) throws GuildaNaoEncontradoException, JogadorDuplicadoException, dbexception {
-//        Guilda Guilda = GuildaDao.findByNome(nomeGuilda); // Se não existir ele vai passar reto com o exception
-//        var jogador = new Jogador(nomej, idade, posicao);
-//        jogadorDao.insert(jogador);
-//        if (!GuildaDao.pesquisarJogador(Guilda, jogador)) {
-//            jogador.setGuilda(Guilda);
-//        }
-//        jogadorDao.update(jogador);
-//        System.out.println("Jogador '" + jogador.getNome() + "' adicionado ao Guilda '" + Guilda.getNome() + "' com sucesso!");
-//    }
+
+    // ADICIONAR Aventureirio A Guilda
+    public void adicionarAventureiroGuilda(String nomeGuilda, String nomej , int nivel, Classes classe) throws dbexception, guildaNaoEncontradaException, AventureiroDuplicadoException {
+        Guilda guilda = guildaDao.findByNome(nomeGuilda); // Se não existir ele vai passar reto com o exception
+        var aven = new Aventureiro(nomej,nivel, classe);
+        avntDao.insert(aven);
+        if (!guildaDao.pesquisarAventureiro(guilda, aven)) {
+            aven.setGuilda(guilda);
+        }
+        avntDao.update(aven);
+        System.out.println("Jogador '" + aven.getNome() + "' adicionado ao Guilda '" + guilda.getNome() + "' com sucesso!");
+    }
 //
 //    // REGISTRAR PARTIDA
 //    public void registrarPartida(String nomeGuilda1, String nomeGuilda2, LocalDate dataPartida, int pntsGuilda1, int pntsGuilda2)
