@@ -10,11 +10,10 @@ import model.Entity.AvtrMestre;
 import model.Entity.Guilda;
 
 
+import java.sql.Array;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class ProgramMain {
     public static void main(String[] args) {
@@ -58,10 +57,10 @@ public class ProgramMain {
                         sc.nextLine();
                         service.cadastrarGuilda(nomeGuilda, level);
                         System.out.println("Sua Guilda terá um Aventureiro mestre? y/n");
-                        String escolha = sc.nextLine();
+                        String escolha = sc.nextLine().toUpperCase();
 
-                        if (!escolha.equalsIgnoreCase("y") && !escolha.equalsIgnoreCase("n")) {throw new EscolhaerradaException("Escolha incorreta!");}
-                        else if (escolha.equalsIgnoreCase("y")) {
+                        if (!escolha.equalsIgnoreCase("Y") && !escolha.equalsIgnoreCase("N")) {throw new EscolhaerradaException("Escolha incorreta!");}
+                        else if (escolha.equalsIgnoreCase("Y")) {
 
                             System.out.print("Nome do Aventureiro: ");
                             String nomeAventureiro = sc.nextLine().trim();
@@ -70,10 +69,7 @@ public class ProgramMain {
                             int nivel = sc.nextInt();
                             sc.nextLine();
                             System.out.print("Classe do Aventureiro:\n");
-                            Classes[] classes = Classes.values();
-                            for (var e : classes) {
-                                System.out.println(e);
-                            }
+                            Arrays.stream(Classes.values()).forEach(System.out::println);
                             Classes classe = Classes.valueOf(sc.nextLine().trim().toUpperCase());
                             service.criarMestreGuilda(nomeAventureiro, nivel, classe, nomeGuilda);
                         }
@@ -94,10 +90,7 @@ public class ProgramMain {
                     System.out.print("Nome do Aventureiro: ");
                     String nomeAventureiro = sc.nextLine().trim();
 
-                    Classes[] classes = Classes.values();
-                    for (var e : classes) {
-                        System.out.println(e);
-                    }
+                    Arrays.stream(Classes.values()).forEach(System.out::println);
                     try {
                         System.out.print("Classe do Aventureiro: ");
                         String classe = sc.nextLine().trim().toUpperCase();
@@ -113,38 +106,48 @@ public class ProgramMain {
                         System.out.println("Escolha uma classe certa!");
                     }
                 }
-//
-//                case 3 -> {
-//                    // ── REGISTRAR missão ──
-//                    System.out.print("Nome do Guilda 1: ");
-//                    String Guilda1 = sc.nextLine().trim();
-//
-//                    System.out.print("Nome do Guilda 2: ");
-//                    String Guilda2 = sc.nextLine().trim();
-//
-//                    try {
-//                        System.out.print("Ano da missão: ");
-//                        int ano = Integer.parseInt(sc.nextLine().trim());
-//                        System.out.print("Mês da missão: ");
-//                        int mes = Integer.parseInt(sc.nextLine().trim());
-//                        System.out.print("Dia da missão: ");
-//                        int dia = Integer.parseInt(sc.nextLine().trim());
-//                        var data = LocalDate.of(ano, mes, dia);
-//
-//                        System.out.print("Pontos do " + Guilda1 + ": ");
-//                        int pontos1 = Integer.parseInt(sc.nextLine().trim());
-//
-//                        System.out.print("Pontos do " + Guilda2 + ": ");
-//                        int pontos2 = Integer.parseInt(sc.nextLine().trim());
-//
-//                        service.registrarmissão(Guilda1, Guilda2, data, pontos1, pontos2);
-//
-//                    } catch (GuildaNaoEncontradoException | GuildaIncompletoException | TorneioFinalizadoException e) {
-//                        System.out.println(e.getMessage());
-//                    } catch (NumberFormatException e) {
-//                        System.out.println("Valor inválido!");
-//                    }
-//                }
+
+                case 3 -> {
+                    // ── REGISTRAR missão ──
+                    System.out.print("Nome da Missao: ");
+                    String missao = sc.nextLine().trim();
+
+                    System.out.println("Nome da Guilda responsável pela Missão: ");
+                    String guildaNome = sc.nextLine().trim();
+
+                    System.out.println("Quantos aventureiros participaram da missão?");
+                    try {
+                        int quantidadeparti = sc.nextInt();
+                        sc.nextLine();
+
+                        var participantes = new ArrayList<String>();
+
+                        if (quantidadeparti > 0) {
+                            while (quantidadeparti > 0 ) {
+                                System.out.println("Digite o nome do aventureiro: ");
+                                participantes.add(sc.nextLine());
+                                quantidadeparti =- 1;
+                            }
+
+                        } else {
+                            throw new quantidadeParticipantesErradaException("Quantidade de participantes inválida!");
+                        }
+
+                        System.out.println("Dificuldade da missão: ");
+                        int dificuldade = sc.nextInt();
+                        sc.nextLine();
+
+                        System.out.println("Resultado da missão (Vitória ou derrota)");
+                        String resultado = sc.nextLine().toUpperCase();
+                        if (!resultado.equalsIgnoreCase("V") && !resultado.equalsIgnoreCase("D") && !resultado.equalsIgnoreCase("Vitória") && !resultado.equalsIgnoreCase("Derrota") && !resultado.equalsIgnoreCase("Vitoria")) {throw new EscolhaerradaException("Escolha incorreta!");}
+                        service.
+
+                    } catch (quantidadeParticipantesErradaException| EscolhaerradaException e) {
+                        System.out.println(e.getMessage());
+                    } catch (InputMismatchException e) {
+                        System.out.println("Valor inválido!");
+                    }
+                }
 //
 //                case 4 -> {
 //                    // ── VER RANKING ──
