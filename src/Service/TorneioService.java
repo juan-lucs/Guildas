@@ -3,6 +3,8 @@ package Service;
 import Interfaces.*;
 import db.dbexception;
 import enums.Classes;
+import enums.Dificuldadeimcompatível;
+import enums.resultadoMissao;
 import model.Entity.Aventureiro;
 import model.Entity.AvtrMestre;
 import exeption.*;
@@ -61,26 +63,25 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         avntDao.insert(aven);
         System.out.println("Jogador '" + aven.getNome() + "' adicionado ao Guilda '" + guilda.getNome() + "' com sucesso!");
     }
-//
-//    // REGISTRAR PARTIDA
-//    public void registrarPartida(String nomeGuilda1, String nomeGuilda2, LocalDate dataPartida, int pntsGuilda1, int pntsGuilda2)
-//            throws GuildaNaoEncontradoException, GuildaIncompletoException, dbexception {
-//
-//        Guilda t1 = GuildaDao.findByNome(nomeGuilda1);
-//        var t2 = GuildaDao.findByNome(nomeGuilda2);
-//
-//        if (t1.getJogadores().isEmpty()) {
-//            throw new GuildaIncompletoException("O Guilda '" + t1.getNome() + "' não tem jogadores cadastrados!");
-//        }
-//        if (t2.getJogadores().isEmpty()) {
-//            throw new GuildaIncompletoException("O Guilda '" + t2.getNome() + "' não tem jogadores cadastrados!");
-//        }
-//
-//        partidas.add(new Partida(t1, t2, dataPartida));
-//        pontosDeCadaGuilda.put(t1, pontosDeCadaGuilda.getOrDefault(t1, 0) + pntsGuilda1);
-//        pontosDeCadaGuilda.put(t2, pontosDeCadaGuilda.getOrDefault(t2, 0) + pntsGuilda2);
-//        System.out.println("Partida registrada com sucesso!");
-//    }
+
+    // REGISTRAR PARTIDA
+    public void registrarMissao(String nomeMissao, String nomeGuilda, ArrayList<String> participantes , int dificuldade, resultadoMissao resultado)
+            throws Dificuldadeimcompatível, guildaNaoEncontradaException, dbexception, GuildavaziaException {
+
+        if (dificuldade > 10 && dificuldade < 1) {
+            throw new Dificuldadeimcompatível("Valor inválido para dificuldade!")
+        }
+        var guilda = guildaDao.findByNome(nomeGuilda);
+
+        if (guilda.getAventureiros().isEmpty()) {
+            throw new GuildavaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
+        }
+
+        partidas.add(new Partida(t1, t2, dataPartida));
+        pontosDeCadaGuilda.put(t1, pontosDeCadaGuilda.getOrDefault(t1, 0) + pntsGuilda1);
+        pontosDeCadaGuilda.put(t2, pontosDeCadaGuilda.getOrDefault(t2, 0) + pntsGuilda2);
+        System.out.println("Partida registrada com sucesso!");
+    }
 
 //    // RANKING (decrescente)
 //    public List<Map.Entry<Guilda, Integer>> rankingTorneio() {

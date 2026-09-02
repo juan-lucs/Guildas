@@ -4,6 +4,8 @@ import Service.*;
 
 import db.dbexception;
 import enums.Classes;
+import enums.Dificuldadeimcompatível;
+import enums.resultadoMissao;
 import exeption.*;
 import model.Entity.Aventureiro;
 import model.Entity.AvtrMestre;
@@ -110,7 +112,7 @@ public class ProgramMain {
                 case 3 -> {
                     // ── REGISTRAR missão ──
                     System.out.print("Nome da Missao: ");
-                    String missao = sc.nextLine().trim();
+                    String missaoNome = sc.nextLine().trim();
 
                     System.out.println("Nome da Guilda responsável pela Missão: ");
                     String guildaNome = sc.nextLine().trim();
@@ -133,19 +135,19 @@ public class ProgramMain {
                             throw new quantidadeParticipantesErradaException("Quantidade de participantes inválida!");
                         }
 
-                        System.out.println("Dificuldade da missão: ");
+                        System.out.println("Dificuldade da missão: (1 a 10)");
                         int dificuldade = sc.nextInt();
                         sc.nextLine();
-
                         System.out.println("Resultado da missão (Vitória ou derrota)");
-                        String resultado = sc.nextLine().toUpperCase();
-                        if (!resultado.equalsIgnoreCase("V") && !resultado.equalsIgnoreCase("D") && !resultado.equalsIgnoreCase("Vitória") && !resultado.equalsIgnoreCase("Derrota") && !resultado.equalsIgnoreCase("Vitoria")) {throw new EscolhaerradaException("Escolha incorreta!");}
-                        service.
+                        resultadoMissao resultado = resultadoMissao.valueOf(sc.nextLine().toUpperCase());
+                        service.registrarMissao(missaoNome, guildaNome, participantes, dificuldade, resultado);
 
-                    } catch (quantidadeParticipantesErradaException| EscolhaerradaException e) {
+                    } catch (GuildavaziaException | guildaNaoEncontradaException | Dificuldadeimcompatível | quantidadeParticipantesErradaException| EscolhaerradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Valor inválido!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Resultado imcompatível!");
                     }
                 }
 //
