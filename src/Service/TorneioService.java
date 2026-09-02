@@ -69,18 +69,17 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
             throws Dificuldadeimcompatível, guildaNaoEncontradaException, dbexception, GuildavaziaException {
 
         if (dificuldade > 10 && dificuldade < 1) {
-            throw new Dificuldadeimcompatível("Valor inválido para dificuldade!")
+            throw new Dificuldadeimcompatível("Valor inválido para dificuldade!");
         }
         var guilda = guildaDao.findByNome(nomeGuilda);
 
         if (guilda.getAventureiros().isEmpty()) {
             throw new GuildavaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
         }
+        List<Aventureiro> aventureirso = participantes.stream().map(nome -> new Aventureiro())
 
-        partidas.add(new Partida(t1, t2, dataPartida));
-        pontosDeCadaGuilda.put(t1, pontosDeCadaGuilda.getOrDefault(t1, 0) + pntsGuilda1);
-        pontosDeCadaGuilda.put(t2, pontosDeCadaGuilda.getOrDefault(t2, 0) + pntsGuilda2);
-        System.out.println("Partida registrada com sucesso!");
+
+        System.out.println("Missão registrada com sucesso!");
     }
 
 //    // RANKING (decrescente)
