@@ -142,7 +142,7 @@ public class ProgramMain {
                         resultadoMissao resultado = resultadoMissao.valueOf(sc.nextLine().toUpperCase());
                         service.registrarMissao(missaoNome, guildaNome, participantes, dificuldade, resultado);
 
-                    } catch (GuildavaziaException | guildaNaoEncontradaException | Dificuldadeimcompatível | quantidadeParticipantesErradaException| EscolhaerradaException e) {
+                    } catch (AventureiroNaoExiste | GuildavaziaException | guildaNaoEncontradaException | Dificuldadeimcompatível | quantidadeParticipantesErradaException| EscolhaerradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Valor inválido!");

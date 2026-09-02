@@ -54,10 +54,12 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
     }
 
     // ADICIONAR Aventureiro A Guilda
-    public void adicionarAventureiroGuilda(String nomeGuilda, String nomej , int nivel, Classes classe) throws dbexception, guildaNaoEncontradaException, AventureiroDuplicadoException {
+    public void adicionarAventureiroGuilda(String nomeGuilda, String nomej , int nivel, Classes classe) throws AventureiroDuplicadoException, dbexception, guildaNaoEncontradaException, AventureiroDuplicadoException {
         Guilda guilda = guildaDao.findByNome(nomeGuilda); // Se não existir ele vai passar reto com o exception
         var aven = new Aventureiro(nomej,nivel, classe);
-        if (!guildaDao.pesquisarAventureiro(guilda, aven)) {
+        if (guildaDao.pesquisarAventureiro(guilda, aven.getNome())) {
+            throw new AventureiroDuplicadoException("Aventureiro já está na guilda!");
+        } else {
             aven.setGuilda(guilda);
         }
         avntDao.insert(aven);
@@ -66,7 +68,7 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
 
     // REGISTRAR PARTIDA
     public void registrarMissao(String nomeMissao, String nomeGuilda, ArrayList<String> participantes , int dificuldade, resultadoMissao resultado)
-            throws Dificuldadeimcompatível, guildaNaoEncontradaException, dbexception, GuildavaziaException {
+            throws Dificuldadeimcompatível, guildaNaoEncontradaException, dbexception, GuildavaziaException, AventureiroNaoExiste {
 
         if (dificuldade > 10 && dificuldade < 1) {
             throw new Dificuldadeimcompatível("Valor inválido para dificuldade!");
@@ -76,9 +78,11 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         if (guilda.getAventureiros().isEmpty()) {
             throw new GuildavaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
         }
-        List<Aventureiro> aventureirso = participantes.stream().map(nome -> new Aventureiro())
-
-
+        participantes.forEach(participante -> {
+            if (!guildaDao.pesquisarAventureiro(guilda, participante)) {
+                throw new AventureiroNaoExiste("O aventureiro " + participante + " não está na guilda " + guilda.getNome());
+        }
+        });
         System.out.println("Missão registrada com sucesso!");
     }
 

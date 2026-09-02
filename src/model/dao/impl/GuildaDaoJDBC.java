@@ -123,23 +123,24 @@ public class GuildaDaoJDBC implements GuildaDao {
     }
 
     @Override
-    public boolean pesquisarAventureiro(Guilda g, Aventureiro a) throws AventureiroDuplicadoException {
+    public boolean pesquisarAventureiro(Guilda g, String nome){
         PreparedStatement st = null;
         ResultSet rs = null;
         try {
-            st = conn.prepareStatement("SELECT * " +
+            st = conn.prepareStatement("SELECT 1 " +
                     "FROM aventureiro " +
                     "WHERE name = ? AND guilda_id = ?");
-            st.setString(1, a.getNome());
+            st.setString(1, nome);
             st.setLong(2, g.getId());
             rs = st.executeQuery();
 
-            if(rs.next()) {
-                throw new AventureiroDuplicadoException("Aventureiro já está cadastrado nessa Guilda!");
-            }
-            return false;
+            return rs.next();
+
         } catch (SQLException e) {
             throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+            bancodados.closeResultSet(rs);
         }
     }
     @Override

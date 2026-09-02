@@ -14,6 +14,6 @@ public interface GuildaDao {
     void updateReputacao(Guilda arg);
     Guilda findByNome(String nome) throws guildaNaoEncontradaException;
     List<Guilda> findAll();
-    boolean pesquisarAventureiro(Guilda g, Aventureiro a) throws AventureiroDuplicadoException;
+    boolean pesquisarAventureiro(Guilda g, String nomes);
     List<String> findAllNomes();
 }
