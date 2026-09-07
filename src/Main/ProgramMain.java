@@ -121,7 +121,7 @@ public class ProgramMain {
                             while (quantidadeparti > 0 ) {
                                 System.out.println("Digite o nome do aventureiro: ");
                                 participantes.add(sc.nextLine());
-                                quantidadeparti =- 1;
+                                quantidadeparti -= 1;
                             }
 
                         } else {

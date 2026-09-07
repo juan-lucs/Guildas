@@ -3,9 +3,9 @@ package model.Entity;
 import enums.resultadoMissao;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class Missao implements Serializable {
     private int id;
@@ -43,8 +43,8 @@ public class Missao implements Serializable {
         this.nome = nome;
     }
 
-    public Set<Aventureiro> getParticipantes() {
-        return (Set<Aventureiro>) participantes.values();
+    public Collection<Aventureiro> getParticipantes() {
+        return participantes.values();
     }
 
     public void setParticipantes(Map<String, Aventureiro> participantes) {
