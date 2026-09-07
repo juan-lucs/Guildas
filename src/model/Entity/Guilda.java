@@ -1,22 +1,20 @@
 package model.Entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Guilda implements Serializable {
-    private Long id;
+    private int id;
     private String nome;
     private int level;
     private AvtrMestre mestre;
     private int reputacao;
-    private Set<Aventureiro> aventureiros = new HashSet<>();
+    private Map<String, Aventureiro> aventureiros = new HashMap<>();
 
     public Guilda() {
     }
 
-    public Guilda(Long id, String nome, int level) {
+    public Guilda(int id, String nome, int level) {
         this.id = id;
         this.nome = nome;
         this.level = level;
@@ -27,13 +25,13 @@ public class Guilda implements Serializable {
         this.level = level;
     }
 
-    public Guilda(Long id, String nome) {
+    public Guilda(int id, String nome) {
         this.id = id;
         this.nome = nome;
     }
 
-    public void setAventureiro(Aventureiro aventureiro) {
-        this.aventureiros.add(aventureiro);
+    public void adicionarAventureiro(Aventureiro aventureiro) {
+        this.aventureiros.put(aventureiro.getNome(), aventureiro);
     }
 
     public int getLevel() {
@@ -67,18 +65,19 @@ public class Guilda implements Serializable {
         this.reputacao = reputacao;
     }
 
-    public Set<Aventureiro> getAventureiros() {
-        return new HashSet<>(aventureiros); // CRIA UMA COPIA O SET E ENVIA, PARA PROTEÇÃO E BOA PRATICA
+    public Set<String> getAventureiros() {
+        return aventureiros.keySet(); // CRIA UMA COPIA O SET E ENVIA, PARA PROTEÇÃO E BOA PRATICA
     }
-    public Long getId() {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public void setAventureiros(Set<Aventureiro> aventureiros) {
+    public void setAventureiros(Map<String, Aventureiro> aventureiros) {
         this.aventureiros = aventureiros;
     }
 
