@@ -134,7 +134,7 @@ public class GuildaDaoJDBC implements GuildaDao {
             while (rs.next()){
                 Aventureiro avt = map.get(rs.getString("name"));
                 if (avt == null) {
-                    map.put(rs.getString("name"), new Aventureiro(rs.getString("name"), rs.getInt("nivel"), Classes.valueOf(rs.getString("classe"))));
+                    map.put(rs.getString("name"), new Aventureiro(rs.getInt("id"), rs.getString("name"), rs.getInt("nivel"), Classes.valueOf(rs.getString("classe"))));
                 }
             }
             return map;
