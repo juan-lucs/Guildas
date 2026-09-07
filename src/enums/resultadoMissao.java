@@ -1,8 +1,9 @@
 package enums;
 
 public enum resultadoMissao {
-VITORIA,
-    VIÓRIA, DERROTA
+    VITORIA,
+    VIÓRIA,
+    DERROTA,
     V,
     D
 }
