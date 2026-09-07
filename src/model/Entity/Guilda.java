@@ -65,8 +65,8 @@ public class Guilda implements Serializable {
         this.reputacao = reputacao;
     }
 
-    public Set<Aventureiro> getAventureiros() {
-        return (Set<Aventureiro>) aventureiros.values();
+    public Collection<Aventureiro> getAventureiros() {
+        return aventureiros.values();
     }
 
     public int getId() {

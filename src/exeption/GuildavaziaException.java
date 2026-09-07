@@ -1,6 +1,6 @@
 package exeption;
 
-public class GuildavaziaException extends Throwable {
-    public GuildavaziaException(String s) {
+public class GuildavaziaException extends Exception {
+    public GuildavaziaException(String s) { super(s);
     }
 }

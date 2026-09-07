@@ -88,7 +88,6 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
             }
         }
         missaoDao.insert(new Missao(nomeMissao,dificuldade, aventureirosnaMissao, guilda, resultado));
-
         System.out.println("Missão registrada com sucesso!");
     }
 
