@@ -15,8 +15,6 @@ public class Aventureiro implements Comparable<Aventureiro>, Serializable {
 
     public Aventureiro() {
     }
-
-
     public Aventureiro(String nome, int nivel, Classes classe) {
         this.classe = classe;
         this.nome = nome;

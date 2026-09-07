@@ -2,16 +2,17 @@ package model.dao.impl;
 
 import db.bancodados;
 import db.dbexception;
-import exeption.AventureiroDuplicadoException;
+import enums.Classes;
 import exeption.guildaNaoEncontradaException;
 import model.Entity.Aventureiro;
-import model.Entity.AvtrMestre;
 import model.Entity.Guilda;
 import model.dao.GuildaDao;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GuildaDaoJDBC implements GuildaDao {
     private Connection conn;
@@ -103,7 +104,7 @@ public class GuildaDaoJDBC implements GuildaDao {
             rs = st.executeQuery();
             var guilda = new Guilda();
             if (rs.next()) {
-                guilda.setId(rs.getLong("id"));
+                guilda.setId(rs.getInt("id"));
                 guilda.setNome(rs.getString("name"));
             } else {
                 throw new guildaNaoEncontradaException("guilda nao encontrada");
@@ -117,6 +118,33 @@ public class GuildaDaoJDBC implements GuildaDao {
         }
     }
 
+    @Override
+    public Map<String, Aventureiro> findAventureirosByGuilda(Guilda guilda) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement("SELECT * " +
+                    "FROM aventureiro " +
+                    "WHERE guilda_id = ?");
+
+            st.setInt(1, guilda.getId());
+            rs = st.executeQuery();
+            Map<String, Aventureiro> map = new HashMap<>();
+
+            while (rs.next()){
+                Aventureiro avt = map.get(rs.getString("name"));
+                if (avt == null) {
+                    map.put(rs.getString("name"), new Aventureiro(rs.getString("name"), rs.getInt("nivel"), Classes.valueOf(rs.getString("classe"))));
+                }
+            }
+            return map;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            bancodados.closeStatement(st);
+            bancodados.closeResultSet(rs);
+        }
+    }
     @Override
     public List<Guilda> findAll() {
         return null;
