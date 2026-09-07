@@ -4,18 +4,11 @@ import Service.*;
 
 import db.dbexception;
 import enums.Classes;
-import enums.Dificuldadeimcompatível;
 import enums.resultadoMissao;
 import exeption.*;
-import model.Entity.Aventureiro;
-import model.Entity.AvtrMestre;
-import model.Entity.Guilda;
 
 
-import java.sql.Array;
-import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class ProgramMain {
     public static void main(String[] args) {
@@ -141,8 +134,7 @@ public class ProgramMain {
                         System.out.println("Resultado da missão (Vitória ou derrota)");
                         resultadoMissao resultado = resultadoMissao.valueOf(sc.nextLine().toUpperCase());
                         service.registrarMissao(missaoNome, guildaNome, participantes, dificuldade, resultado);
-
-                    } catch (AventureiroNaoExiste | GuildavaziaException | guildaNaoEncontradaException | Dificuldadeimcompatível | quantidadeParticipantesErradaException| EscolhaerradaException e) {
+                    } catch (AventureiroNaoExiste | GuildavaziaException | guildaNaoEncontradaException | Dificuldadeimcompativel | quantidadeParticipantesErradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Valor inválido!");

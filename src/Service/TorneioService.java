@@ -3,12 +3,12 @@ package Service;
 import Interfaces.*;
 import db.dbexception;
 import enums.Classes;
-import enums.Dificuldadeimcompatível;
 import enums.resultadoMissao;
 import model.Entity.Aventureiro;
 import model.Entity.AvtrMestre;
 import exeption.*;
 import model.Entity.Guilda;
+import model.Entity.Missao;
 import model.dao.AventureiroDao;
 import model.dao.DaoFactory;
 import model.dao.GuildaDao;
@@ -67,22 +67,28 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
     }
 
     // REGISTRAR PARTIDA
-    public void registrarMissao(String nomeMissao, String nomeGuilda, ArrayList<String> participantes , int dificuldade, resultadoMissao resultado)
-            throws Dificuldadeimcompatível, guildaNaoEncontradaException, dbexception, GuildavaziaException, AventureiroNaoExiste {
+    public void registrarMissao(String nomeMissao, String nomeGuilda, List<String> participantes , int dificuldade, resultadoMissao resultado)
+            throws Dificuldadeimcompativel, guildaNaoEncontradaException, dbexception, GuildavaziaException, AventureiroNaoExiste {
 
-        if (dificuldade > 10 && dificuldade < 1) {
-            throw new Dificuldadeimcompatível("Valor inválido para dificuldade!");
+        if (dificuldade > 10 || dificuldade < 1) {
+            throw new Dificuldadeimcompativel("Valor inválido para dificuldade!");
         }
-        var guilda = guildaDao.findByNome(nomeGuilda);
 
+        var guilda = guildaDao.findByNome(nomeGuilda);
         if (guilda.getAventureiros().isEmpty()) {
             throw new GuildavaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
         }
-        participantes.forEach(participante -> {
-            if (!guildaDao.pesquisarAventureiro(guilda, participante)) {
-                throw new AventureiroNaoExiste("O aventureiro " + participante + " não está na guilda " + guilda.getNome());
+        Map<String, Aventureiro> aventureirosnaMissao = new HashMap<>();
+        Map<String, Aventureiro> aventureiros = guildaDao.findAventureirosByGuilda(guilda);
+        for (var participante : participantes) {
+            if (!aventureiros.containsKey(participante)) {
+                throw new AventureiroNaoExiste("O aventureiro " + participante +" não está na guilda " +guilda.getNome());
+            } else {
+               aventureirosnaMissao.put(participante, aventureiros.get(participante));
+            }
         }
-        });
+        missaoDao.insert(new Missao(nomeMissao,dificuldade, aventureirosnaMissao, guilda, resultado));
+
         System.out.println("Missão registrada com sucesso!");
     }
 

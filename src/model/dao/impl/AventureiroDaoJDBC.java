@@ -38,7 +38,7 @@ public class AventureiroDaoJDBC implements AventureiroDao {
             if (linhasafetadas > 0) {
                 ResultSet rs = st.getGeneratedKeys();
                     if (rs.next()) {
-                        arg.setId(rs.getLong(1));
+                        arg.setId(rs.getInt(1 ));
                     }
                 bancodados.closeResultSet(rs);
                 }   else {

@@ -2,16 +2,11 @@ package model.dao.impl;
 
 import db.bancodados;
 import db.dbexception;
-import model.Entity.Aventureiro;
-import model.Entity.Guilda;
 import model.Entity.Missao;
 import model.dao.MissaoDao;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MissaoDaoJDBC implements MissaoDao {
     private Connection conn;
@@ -38,7 +33,7 @@ public class MissaoDaoJDBC implements MissaoDao {
             stMissao.setString(1, arg.getNome());
             stMissao.setInt(2, arg.getDificuldade());
             stMissao.setLong(3, arg.getGuilda().getId());
-            stMissao.setString(4, arg.getResultado());
+            stMissao.setString(4, String.valueOf(arg.getResultado()));
             int linhasafetadas = stMissao.executeUpdate();
 
             if (linhasafetadas == 0) {
@@ -72,7 +67,7 @@ public class MissaoDaoJDBC implements MissaoDao {
                                                     // que está pegando o primeiro SQLException
 
             } finally {
-                // sempre voltar o auto-commit pro estado normal
+                // sempre voltar o autocommit pro estado normal
                 // porque o conn será usado de novo
                 try {
                     conn.setAutoCommit(true);
@@ -87,56 +82,39 @@ public class MissaoDaoJDBC implements MissaoDao {
 
     @Override
     public List<Missao> findAll() {
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            st = conn.prepareStatement(
-                    "SELECT missao.*, " +
-                            "       g.name AS GuildaNome " +
-                            "FROM missao " +
-                            "INNER JOIN guilda g ON missao.guilda_id = g.id;"
-            );
-            rs = st.executeQuery();
-            List<Missao> list = new ArrayList<>();
-            Map<Long, Guilda> map = new HashMap<>();
-
-            while(rs.next()) {
-                var guildaId = map.get(rs.getLong("guilda_id"));
-                if (guildaId == null) {
-                    Guilda guilda = instanciarGuilda(rs, "guilda_id", "GuildaNome");
-                    map.put(rs.getLong("guilda_id"), guildaId);
-                }
-
-                Missao missao = instanciarMissao(rs, guildaId);
-                list.add(missao);
-            }
-            return list;
-        } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
-        } finally {
-            bancodados.closeStatement(st);
-            bancodados.closeResultSet(rs);
-        }
+//        PreparedStatement st = null;
+//        ResultSet rs = null;
+//        try {
+//            st = conn.prepareStatement(
+//                    "SELECT missao.*, " +
+//                            "       g.name AS GuildaNome " +
+//                            "FROM missao " +
+//                            "INNER JOIN guilda g ON missao.guilda_id = g.id;"
+//            );
+//            rs = st.executeQuery();
+//            List<Missao> list = new ArrayList<>();
+//            Map<Long, Guilda> map = new HashMap<>();
+//
+//            while(rs.next()) {
+//                var guildaId = map.get(rs.getLong("guilda_id"));
+//                if (guildaId == null) {
+//                    Guilda guilda = instanciarGuilda(rs, "guilda_id", "GuildaNome");
+//                    map.put(rs.getLong("guilda_id"), guildaId);
+//                }
+//
+//                Missao missao = instanciarMissao(rs, guildaId);
+//                list.add(missao);
+//            }
+//            return list;
+//        } catch (SQLException e) {
+//            throw new dbexception(e.getMessage());
+//        } finally {
+//            bancodados.closeStatement(st);
+//            bancodados.closeResultSet(rs);
+//        }
+        return null;
     }
 
-    private Missao instanciarMissao(ResultSet rs, Guilda guilda) throws SQLException {
-        Missao missao = new Missao();
-        missao.setId(rs.getLong("id"));
-        missao.setNome(rs.getString("name"));
-        missao.setDificuldade(rs.getInt("dificuldade"));
-        missao.setParticipantes(rs.getString("participantes"));
-        missao.setGuilda(guilda);
-        missao.setEquipeRecomendada(rs.getString("equipe_recomendada"));
-        missao.setResultado(rs.getString("resultado"));
-        return missao;
-    }
-
-    private Guilda instanciarGuilda(ResultSet rs, String colunaId, String colunaNome) throws SQLException {
-        Guilda guilda = new Guilda();
-        guilda.setId(rs.getLong(colunaId));
-        guilda.setNome(rs.getString(colunaNome));
-        return guilda;
-    }
 }
 
 

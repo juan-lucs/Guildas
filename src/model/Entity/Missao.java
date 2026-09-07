@@ -1,34 +1,37 @@
 package model.Entity;
 
+import enums.resultadoMissao;
+
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class Missao implements Serializable {
-    private Long id;
+    private int id;
     private String nome;
     private int dificuldade;
-    private String participantes;
+    private Map<String, Aventureiro> participantes;
     private Guilda guilda;
-    private String equipeRecomendada;
-    private String resultado;
+
+    private resultadoMissao resultado;
 
     public Missao() {
     }
 
-    public Missao(String nome, int dificuldade, String participantes, Guilda guilda, String equipeRecomendada, String resultado) {
+    public Missao(String nome, int dificuldade, Map<String, Aventureiro> participantes, Guilda guilda, resultadoMissao resultado) {
         this.nome = nome;
         this.dificuldade = dificuldade;
         this.participantes = participantes;
         this.guilda = guilda;
-        this.equipeRecomendada = equipeRecomendada;
         this.resultado = resultado;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -40,20 +43,20 @@ public class Missao implements Serializable {
         this.nome = nome;
     }
 
+    public Set<Aventureiro> getParticipantes() {
+        return (Set<Aventureiro>) participantes.values();
+    }
+
+    public void setParticipantes(Map<String, Aventureiro> participantes) {
+        this.participantes = participantes;
+    }
+
     public int getDificuldade() {
         return dificuldade;
     }
 
     public void setDificuldade(int dificuldade) {
         this.dificuldade = dificuldade;
-    }
-
-    public String getParticipantes() {
-        return participantes;
-    }
-
-    public void setParticipantes(String participantes) {
-        this.participantes = participantes;
     }
 
     public Guilda getGuilda() {
@@ -64,19 +67,11 @@ public class Missao implements Serializable {
         this.guilda = guilda;
     }
 
-    public String getEquipeRecomendada() {
-        return equipeRecomendada;
-    }
-
-    public void setEquipeRecomendada(String equipeRecomendada) {
-        this.equipeRecomendada = equipeRecomendada;
-    }
-
-    public String getResultado() {
+    public resultadoMissao getResultado() {
         return resultado;
     }
 
-    public void setResultado(String resultado) {
+    public void setResultado(resultadoMissao resultado) {
         this.resultado = resultado;
     }
 

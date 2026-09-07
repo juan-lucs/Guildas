@@ -65,8 +65,8 @@ public class Guilda implements Serializable {
         this.reputacao = reputacao;
     }
 
-    public Set<String> getAventureiros() {
-        return aventureiros.keySet(); // CRIA UMA COPIA O SET E ENVIA, PARA PROTEÇÃO E BOA PRATICA
+    public Set<Aventureiro> getAventureiros() {
+        return (Set<Aventureiro>) aventureiros.values();
     }
 
     public int getId() {

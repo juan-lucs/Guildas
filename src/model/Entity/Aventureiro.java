@@ -7,7 +7,7 @@ import java.util.Objects;
 
 
 public class Aventureiro implements Comparable<Aventureiro>, Serializable {
-    private Long id;
+    private int id;
     private String nome;
     private int nivel;
     private Classes classe;
@@ -28,23 +28,23 @@ public class Aventureiro implements Comparable<Aventureiro>, Serializable {
         this.guilda = guilda;
     }
 
-    public Aventureiro(Long id, String nome, int nivel, Classes classe, Guilda guilda) {
+    public Aventureiro(int id, String nome, int nivel, Classes classe) {
         this.id = id;
         this.nome = nome;
         this.nivel = nivel;
         this.classe = classe;
-        this.guilda = guilda;
+//        this.guilda = guilda;
     }
 
     public Classes getclasse() {
         return classe;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
