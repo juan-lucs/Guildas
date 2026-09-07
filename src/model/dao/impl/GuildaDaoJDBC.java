@@ -139,7 +139,7 @@ public class GuildaDaoJDBC implements GuildaDao {
             }
             return map;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new dbexception(e.getMessage());
         } finally {
             bancodados.closeStatement(st);
             bancodados.closeResultSet(rs);

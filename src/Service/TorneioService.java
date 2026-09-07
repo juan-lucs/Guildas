@@ -75,11 +75,12 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
         }
 
         var guilda = guildaDao.findByNome(nomeGuilda);
+        Map<String, Aventureiro> aventureiros = guildaDao.findAventureirosByGuilda(guilda);
+        guilda.setAventureiros(aventureiros);
         if (guilda.getAventureiros().isEmpty()) {
             throw new GuildavaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
         }
         Map<String, Aventureiro> aventureirosnaMissao = new HashMap<>();
-        Map<String, Aventureiro> aventureiros = guildaDao.findAventureirosByGuilda(guilda);
         for (var participante : participantes) {
             if (!aventureiros.containsKey(participante)) {
                 throw new AventureiroNaoExiste("O aventureiro " + participante +" não está na guilda " +guilda.getNome());

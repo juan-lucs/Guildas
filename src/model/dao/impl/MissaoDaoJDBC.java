@@ -41,7 +41,7 @@ public class MissaoDaoJDBC implements MissaoDao {
             }
             rs = stMissao.getGeneratedKeys();
             if (rs.next()) {
-             arg.setId(rs.getInt("id"));
+             arg.setId(rs.getInt(1));
             }
 
             // AGORA QUE MISSAO FOI CRIADA E EXISTE UM ID, SE CRIA A TABELA DE PARTICIPANTES DESSA MISSÃO
