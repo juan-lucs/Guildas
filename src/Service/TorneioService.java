@@ -88,16 +88,22 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
                aventureirosnaMissao.put(participante, aventureiros.get(participante));
             }
         }
+        if (resultado == resultadoMissao.D || resultado == resultadoMissao.DERROTA) {
+            guilda.setReputacao(guilda.getReputacao() - dificuldade * 100);
+        } else {
+            guilda.setReputacao(guilda.getReputacao() + dificuldade * 100);
+        }
+        guildaDao.updateReputacao(guilda);
         missaoDao.insert(new Missao(nomeMissao,dificuldade, aventureirosnaMissao, guilda, resultado));
         System.out.println("Missão registrada com sucesso!");
     }
 
-//    // RANKING (decrescente)
-//    public List<Map.Entry<Guilda, Integer>> rankingTorneio() {
-//        List<Map.Entry<Guilda, Integer>> pontosList = new ArrayList<>(pontosDeCadaGuilda.entrySet());
-//        pontosList.sort(Comparator.comparingInt(Map.Entry<Guilda, Integer>::getValue).reversed());
-//        return pontosList;
-//    }
+    // RANKING (decrescente)
+    public List<Guilda> rankingTorneio() {
+        var guildas = guildaDao.findAll();
+        guildas.sort(Comparator.comparing((Guilda g) -> g.getReputacao()).thenComparing(g -> g.getNome()));
+        return guildas;
+    }
 //
 //    // RESUMO DO TORNEIO
 //    public void resumoTorneio() {

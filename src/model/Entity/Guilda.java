@@ -20,6 +20,13 @@ public class Guilda implements Serializable {
         this.level = level;
     }
 
+    public Guilda(int id, String nome, int level, int reputacao) {
+        this.id = id;
+        this.nome = nome;
+        this.level = level;
+        this.reputacao = reputacao;
+    }
+
     public Guilda(String nome, int level) {
         this.nome = nome;
         this.level = level;

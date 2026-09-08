@@ -142,20 +142,20 @@ public class ProgramMain {
                         System.out.println("Resultado imcompatível!");
                     }
                 }
-//
-//                case 4 -> {
-//                    // ── VER RANKING ──
-//                    var ranking = service.rankingTorneio();
-//                    if (ranking.isEmpty()) {
-//                        System.out.println("Nenhum Guilda cadastrado ainda.");
-//                    } else {
-//                        System.out.println("\n=== RANKING ===");
-//                        int pos = 1;
-//                        for (var entry : ranking) {
-//                            System.out.println(pos++ + "º " + entry.getKey().getNome() + " - " + entry.getValue() + " pontos");
-//                        }
-//                    }
-//                }
+
+                case 4 -> {
+                    // ── VER RANKING ──
+                    var ranking = service.rankingTorneio();
+                    if (ranking.isEmpty()) {
+                        System.out.println("Nenhum Guilda cadastrado ainda.");
+                    } else {
+                        System.out.println("\n=== RANKING ===");
+                        int pos = 1;
+                        for (var entry : ranking) {
+                            System.out.println(pos++ + "º " + entry.getNome() + " - " + entry.getReputacao() + " pontos");
+                        }
+                    }
+                }
 //
 //                case 6 -> {
 //                    // ── EXPORTAR RANKING ──

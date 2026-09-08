@@ -147,7 +147,23 @@ public class GuildaDaoJDBC implements GuildaDao {
     }
     @Override
     public List<Guilda> findAll() {
-        return null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement("SELECT * FROM guilda");
+            rs = st.executeQuery();
+
+            List<Guilda> guildas = new ArrayList<>();
+            while (rs.next()) {
+                guildas.add(new Guilda(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4)));
+            }
+            return guildas;
+        } catch (SQLException e) {
+            throw new dbexception(e.getMessage());
+        } finally {
+            bancodados.closeStatement(st);
+            bancodados.closeResultSet(rs);
+        }
     }
 
     @Override
