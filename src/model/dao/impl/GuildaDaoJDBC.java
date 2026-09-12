@@ -81,6 +81,7 @@ public class GuildaDaoJDBC implements GuildaDao {
             );
             st.setInt(1, arg.getReputacao());
             st.setLong(2, arg.getId());
+            st.executeUpdate();
         } catch (SQLException e) {
             throw new dbexception(e.getMessage());
         } finally {
