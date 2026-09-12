@@ -1,6 +1,4 @@
 package Service;
-
-import Interfaces.*;
 import db.dbexception;
 import enums.Classes;
 import enums.resultadoMissao;
@@ -16,7 +14,7 @@ import model.dao.MissaoDao;
 
 import java.util.*;
 
-public class TorneioService implements Exportavel, Classificavel, Estatistico {
+public class TorneioService {
 
     final AventureiroDao avntDao = DaoFactory.createAventureiroDao();
     final GuildaDao guildaDao = DaoFactory.createGuildaDao();
@@ -111,66 +109,5 @@ public class TorneioService implements Exportavel, Classificavel, Estatistico {
 //        System.out.println("Guildas participando: " + repositorio.tamanho());
 //        System.out.println("Partidas jogadas:   " + partidas.size());
 //    }
-//
-//    // FINALIZAR TORNEIO
-//    public void finalizarTorneio() throws TorneioFinalizadoException {
-//        verificarTorneioAberto();
-//        status = StatusTorneio.FINALIZADO;
-//        System.out.println("Torneio finalizado com sucesso! Não é mais possível cadastrar Guildas, jogadores ou partidas.");
-//    }
-//
-//    public StatusTorneio getStatus() {
-//        return status;
-//    }
-//
-//    // MÉTODO GENÉRICO DELIMITADO
-//    public <T extends Jogador> void exibirJogadores(List<T> jogadores) {
-//        for (T j : jogadores) {
-//            System.out.println("  - " + j.getNome() + " | " + j.getIdade() + " anos");
-//        }
-//    }
-//
-//    // MÉTODO COM WILDCARD
-//    public void listarGuildas(List<? extends Guilda> Guildas) {
-//        for (Guilda t : Guildas) {
-//            System.out.println("  - " + t.getNome() + " [" + t.getModalidade() + "]");
-//        }
-//    }
-//
-//    // HELPER PRIVADO
-//    private void verificarTorneioAberto() throws TorneioFinalizadoException {
-//        if (status == StatusTorneio.FINALIZADO) {
-//            throw new TorneioFinalizadoException("Esta ação não é permitida: o torneio já foi finalizado!");
-//        }
-//    }
-//
-//    // GETTERS ÚTEIS
-//    public List<Guilda> getGuildas() {
-//        return repositorio.listarTodos();
-//    }
-//
-    // INTERFACES
-    @Override
-    public String getDados() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== RANKING DO TORNEIO ===\n");
-        int pos = 1;
-//        for (Map.Entry<Guilda, Integer> entry : rankingTorneio()) {
-//            sb.append(pos++).append("º ").append(entry.getKey().getNome())
-//                    .append(" - ").append(entry.getValue()).append(" pontos\n");
-//        }
-        return sb.toString();
-    }
 
-    @Override
-    public int getPontuacao() {
-        // retorna a maior pontuação do torneio
-        return 2;
-    }
-
-    @Override
-    public String getTotalPartidas() {
-        return null;
-//        return String.valueOf(partidas.size());
-    }
 }
