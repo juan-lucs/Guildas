@@ -21,18 +21,25 @@ O desempenho nas missões concederá **reputação**, utilizada para determinar 
 
 # Funcionalidades
 
-## Implementado / em desenvolvimento
+## Implementado
 
-* Cadastro de guildas
-* Busca e listagem de guildas
-* Cadastro de aventureiros
-* Associação de aventureiros a guildas
+* Cadastro de guildas (nome e level)
+* Criação de um mestre para a guilda (aventureiro com nível mínimo de 50)
+* Cadastro de aventureiros e associação a uma guilda existente
+* Prevenção de guildas e aventureiros duplicados
+* Registro de missões, com participantes, dificuldade (1 a 10) e resultado (vitória/derrota)
+* Atualização automática da reputação da guilda após cada missão
+* Visualização do ranking de guildas por reputação
+* Persistência dos dados utilizando MySQL + JDBC, com transações e rollback no registro de missões
+* Tratamento de erros através de exceções personalizadas para cada regra de negócio
+
+## Ainda não implementado
+
 * Remoção de aventureiros
-* Prevenção de registros duplicados
-* Persistência dos dados utilizando MySQL
-* Acesso ao banco de dados utilizando JDBC
-* Organização entre entidades, regras de negócio e acesso aos dados
-* Tratamento de erros através de exceções personalizadas
+* Exportação do ranking para arquivo (existe um rascunho pronto no código, comentado, mas ainda não está funcional)
+* Cálculo automático do resultado da missão a partir do nível dos aventureiros (hoje o resultado é digitado manualmente por quem está usando o sistema)
+* Sistema de ranks nomeados (Bronze, Prata, Ouro...) — o ranking hoje mostra só o número da reputação
+* Controle de status da missão (impedir que a mesma missão seja concluída duas vezes)
 
 ---
 
@@ -42,37 +49,39 @@ As regras abaixo definem o comportamento esperado do sistema conforme seu desenv
 
 ### Guildas
 
-**RN01 — Nome único**
+**RN01 — Nome único** ✅ *Implementado*
 
 Uma guilda deve possuir um nome único dentro do sistema.
 
-**RN02 — Associação de aventureiros**
+**RN02 — Associação de aventureiros** ✅ *Implementado*
 
 Um aventureiro pode pertencer a apenas uma guilda por vez.
 
-**RN03 — Guilda existente**
+**RN03 — Guilda existente** ✅ *Implementado*
 
 Um aventureiro somente pode ser associado a uma guilda previamente cadastrada.
 
-**RN04 — Mestre da guilda**
+**RN04 — Mestre da guilda** ✅ *Implementado*
 
 Uma guilda poderá possuir um de seus aventureiros como mestre.
 
 O mestre obrigatoriamente deve pertencer à própria guilda.
 
-**RN05 — Mestre único**
+**RN05 — Mestre único** 🚧 *Parcial*
 
 Uma guilda poderá possuir apenas um mestre por vez.
+
+Hoje isso só é garantido porque o menu só oferece a opção de criar o mestre no momento em que a guilda é cadastrada — não existe uma verificação explícita no código impedindo que outro mestre seja definido depois.
 
 ---
 
 ### Aventureiros
 
-**RN06 — Nível**
+**RN06 — Nível** ✅ *Implementado*
 
 Cada aventureiro possuirá um nível que representará parte de sua capacidade dentro da guilda.
 
-**RN07 — Classe**
+**RN07 — Classe** ✅ *Implementado*
 
 Os aventureiros poderão possuir diferentes classes, como:
 
@@ -88,49 +97,51 @@ As classes poderão futuramente ser utilizadas como requisitos para determinadas
 
 ### Missões
 
-**RN08 — Associação da missão**
+**RN08 — Associação da missão** ✅ *Implementado*
 
 Cada missão deve estar associada a uma guilda existente.
 
-**RN09 — Dificuldade**
+**RN09 — Dificuldade** ✅ *Implementado*
 
-Cada missão possuirá uma dificuldade utilizada para determinar se a equipe enviada possui capacidade suficiente para concluí-la.
+Cada missão possuirá uma dificuldade utilizada para determinar se a equipe enviada possui capacidade suficiente para concluí-la. Hoje a dificuldade só é validada dentro do intervalo de 1 a 10.
 
-**RN10 — Participantes**
+**RN10 — Participantes** ✅ *Implementado*
 
 Uma missão poderá ser realizada por um conjunto de aventureiros pertencentes à guilda responsável.
 
 Apenas aventureiros pertencentes à guilda poderão participar da missão.
 
-**RN11 — Força da equipe**
+**RN11 — Força da equipe** ⏳ *Planejado*
 
 A força utilizada na missão será calculada a partir das características dos aventureiros selecionados.
 
-Inicialmente, o nível dos aventureiros será o principal fator utilizado no cálculo.
+Inicialmente, o nível dos aventureiros será o principal fator utilizado no cálculo. Hoje o nível dos aventureiros ainda não influencia o resultado da missão.
 
-**RN12 — Resultado**
+**RN12 — Resultado** ⏳ *Planejado*
 
 O sucesso ou fracasso de uma missão será determinado pelos dados da equipe e pelos requisitos da missão, evitando que o resultado dependa apenas de aleatoriedade.
 
-**RN13 — Missão concluída**
+Hoje o resultado (vitória ou derrota) é digitado manualmente por quem está usando o sistema ao registrar a missão, e não calculado a partir da equipe.
 
-Uma missão já concluída não poderá ser concluída novamente.
+**RN13 — Missão concluída** ⏳ *Planejado*
+
+Uma missão já concluída não poderá ser concluída novamente. Hoje não existe um controle de status que impeça isso.
 
 ---
 
 ### Reputação e Rank
 
-**RN14 — Reputação**
+**RN14 — Reputação** ✅ *Implementado*
 
-Guildas receberão reputação pela conclusão bem-sucedida de missões.
+Guildas receberão reputação pela conclusão bem-sucedida de missões. Hoje o valor é a dificuldade da missão multiplicada por 100, somado em caso de vitória e subtraído em caso de derrota.
 
-**RN15 — Reputação não negativa**
+**RN15 — Reputação não negativa** ⏳ *Planejado*
 
-A reputação de uma guilda não poderá possuir valor negativo.
+A reputação de uma guilda não poderá possuir valor negativo. Hoje não existe essa trava — uma sequência de derrotas pode deixar a reputação negativa.
 
-**RN16 — Rank**
+**RN16 — Rank** ⏳ *Planejado*
 
-O rank de uma guilda será determinado por sua reputação acumulada.
+O rank de uma guilda será determinado por sua reputação acumulada. Hoje o ranking mostra apenas o número da reputação, sem os rótulos abaixo.
 
 Exemplo inicial de progressão:
 
@@ -187,29 +198,29 @@ O desenvolvimento está dividido em etapas para que novas funcionalidades sejam 
 * [x] Cadastro de aventureiros
 * [x] Associação entre aventureiro e guilda
 * [x] Persistência utilizando JDBC e MySQL
+* [x] Nível dos aventureiros
+* [x] Mestre da guilda
 * [ ] Remoção de aventureiros
-* [ ] Nível dos aventureiros
-* [ ] Mestre da guilda
 
 ---
 
 ## Versão 2 — Sistema de Missões
 
-* [ ] Refatorar a entidade Missão
-* [ ] Associar missão a uma guilda
-* [ ] Dificuldade da missão
+* [x] Refatorar a entidade Missão
+* [x] Associar missão a uma guilda
+* [x] Dificuldade da missão
+* [x] Recompensa em reputação
+* [x] Atualização da reputação após uma missão
 * [ ] Status da missão
-* [ ] Recompensa em reputação
-* [ ] Cálculo de força
-* [ ] Determinação de sucesso ou fracasso
-* [ ] Atualização da reputação após uma missão
+* [ ] Cálculo de força a partir do nível dos aventureiros
+* [ ] Determinação automática de sucesso ou fracasso (hoje o resultado é digitado manualmente)
 
 ---
 
 ## Versão 3 — Progressão
 
-* [ ] Sistema de ranks das guildas
-* [ ] Classes de aventureiros
+* [x] Classes de aventureiros
+* [ ] Sistema de ranks das guildas (Bronze, Prata, Ouro...)
 * [ ] Requisitos específicos para missões
 * [ ] Missões limitadas por rank
 * [ ] Regras baseadas na composição da equipe
@@ -218,13 +229,13 @@ O desenvolvimento está dividido em etapas para que novas funcionalidades sejam 
 
 ## Versão 4 — Equipes de Missão
 
-* [ ] Seleção dos aventureiros participantes
-* [ ] Relacionamento N:N entre aventureiros e missões
-* [ ] Tabela associativa `aventureiro_missao`
+* [x] Seleção dos aventureiros participantes
+* [x] Relacionamento N:N entre aventureiros e missões
+* [x] Tabela associativa (`participantesMissao`)
+* [x] Validação de que os participantes pertencem à guilda
 * [ ] Cálculo da força apenas dos participantes
-* [ ] Validação dos requisitos da equipe
 
-Exemplo da relação planejada:
+Relação implementada:
 
 ```text
 AVENTUREIRO
@@ -238,7 +249,7 @@ AVENTUREIRO
 No banco de dados:
 
 ```text
-aventureiro_missao
+participantesMissao
 ├── aventureiro_id
 └── missao_id
 ```
@@ -247,10 +258,10 @@ aventureiro_missao
 
 ## Versão 5 — Consistência e Transações
 
-* [ ] Utilização de transações JDBC
+* [x] Utilização de transações JDBC
+* [x] Atualização da reputação da guilda
+* [x] Rollback em caso de falha
 * [ ] Atualização do status da missão
-* [ ] Atualização da reputação da guilda
-* [ ] Rollback em caso de falha
 * [ ] Testes das principais regras de negócio
 
 Uma conclusão de missão deverá ser tratada como uma única operação:
@@ -318,33 +329,48 @@ A aplicação é organizada de forma a separar as responsabilidades entre as dif
 
 ```text
 src/
-├── Main/
+├── main/
 │   └── ProgramMain.java
 │
+├── service/
+│   └── TorneioService.java
+│
 ├── model/
-│   ├── Guilda.java
-│   ├── Aventureiro.java
-│   └── Missao.java
+│   ├── entity/
+│   │   ├── Guilda.java
+│   │   ├── Aventureiro.java
+│   │   ├── AventureiroMestre.java
+│   │   └── Missao.java
+│   └── dao/
+│       ├── GuildaDao.java
+│       ├── AventureiroDao.java
+│       ├── MissaoDao.java
+│       ├── DaoFactory.java
+│       └── impl/
+│           ├── GuildaDaoJDBC.java
+│           ├── AventureiroDaoJDBC.java
+│           └── MissaoDaoJDBC.java
 │
-├── Service/
-│   └── GuildaService.java
-│
-├── dao/
-│   ├── GuildaDao.java
-│   ├── AventureiroDao.java
-│   └── MissaoDao.java
-│
-├── Exception/
+├── exception/
 │   └── ...
 │
-├── Enums/
+├── enums/
 │   └── ...
 │
-└── db/
-    └── ...
+├── db/
+│   ├── BancoDados.java
+│   └── DbException.java
+│
+├── repository/
+│   └── Repositorio.java   (não utilizado atualmente — código comentado)
+│
+└── util/
+    └── Exportador.java    (não utilizado atualmente — código comentado)
 ```
 
 > A estrutura poderá ser alterada durante o desenvolvimento conforme novas responsabilidades forem adicionadas ao sistema.
+
+**Convenção de nomes:** classes, enums e exceções em `PascalCase`; métodos e variáveis em `camelCase`; pacotes em letras minúsculas.
 
 ---
 
@@ -352,19 +378,20 @@ src/
 
 Atualmente, a persistência é realizada utilizando **MySQL + JDBC**.
 
-Modelo inicial:
+Modelo atual (nomes de coluna exatamente como usados nas queries — hoje é uma mistura de português e inglês):
 
 ```text
 GUILDA
 ├── id
-├── nome
+├── name
+├── level
 ├── reputacao
 └── mestre_id
 
 
 AVENTUREIRO
 ├── id
-├── nome
+├── name
 ├── nivel
 ├── classe
 └── guilda_id
@@ -372,20 +399,21 @@ AVENTUREIRO
 
 MISSAO
 ├── id
-├── nome
+├── name
 ├── dificuldade
-├── status
-├── recompensa
-└── guilda_id
+├── guilda_id
+└── resultado
 ```
 
-Futuramente será adicionada a relação entre aventureiros e missões:
+A relação entre aventureiros e missões já existe, através de uma tabela associativa:
 
 ```text
-AVENTUREIRO_MISSAO
-├── aventureiro_id
-└── missao_id
+PARTICIPANTESMISSAO
+├── missao_id
+└── aventureiro_id
 ```
+
+O registro de uma missão (linha em `missao` + linhas em `participantesMissao`) é feito dentro de uma transação: se algo falhar no meio do processo, o JDBC faz rollback e nada fica salvo pela metade.
 
 ---
 
@@ -425,9 +453,9 @@ A partir dessa base, o projeto continuará evoluindo com novas regras específic
 
 ### Requisitos
 
-* Java 17 ou superior
+* Java 21 ou superior
 * MySQL
-* Driver JDBC do MySQL
+* Driver JDBC do MySQL (`mysql-connector-j`, já configurado no `pom.xml`)
 
 ### Execução
 

@@ -4,7 +4,7 @@ import Service.*;
 
 import db.dbexception;
 import enums.Classes;
-import enums.resultadoMissao;
+import enums.StatusMissao;
 import exeption.*;
 
 
@@ -45,7 +45,7 @@ public class ProgramMain {
                 case 1 -> {
                     // ── CADASTRAR Guilda ──
                     System.out.print("Nome do Guilda : ");
-                    String nomeGuilda = sc.nextLine().trim();
+                    String nomeGuilda = sc.nextLine().trim().toUpperCase();
                     System.out.println("Level da Guilda: ");
                     try {
                         int level = sc.nextInt();
@@ -58,7 +58,7 @@ public class ProgramMain {
                         else if (escolha.equalsIgnoreCase("Y")) {
 
                             System.out.print("Nome do Aventureiro: ");
-                            String nomeAventureiro = sc.nextLine().trim();
+                            String nomeAventureiro = sc.nextLine().trim().toUpperCase();
 
                             System.out.print("Nível do Aventureiro: ");
                             int nivel = sc.nextInt();
@@ -80,18 +80,18 @@ public class ProgramMain {
                 case 2 -> {
                     // ── ADICIONAR Aventureiro ──
                     System.out.print("Nome do Guilda: ");
-                    String nomeGuilda = sc.nextLine().trim();
+                    String nomeGuilda = sc.nextLine().trim().toUpperCase();
 
                     System.out.print("Nome do Aventureiro: ");
-                    String nomeAventureiro = sc.nextLine().trim();
+                    String nomeAventureiro = sc.nextLine().trim().toUpperCase();
 
                     Arrays.stream(Classes.values()).forEach(System.out::println);
                     try {
                         System.out.print("Classe do Aventureiro: ");
-                        String classe = sc.nextLine().trim().toUpperCase();
+                        Classes classe = Classes.valueOf(sc.nextLine().trim().toUpperCase());
                         System.out.print("Nivel do Aventureiro: ");
                         int idade = sc.nextInt();
-                        service.adicionarAventureiroGuilda(nomeGuilda, nomeAventureiro, idade, Classes.valueOf(classe));
+                        service.adicionarAventureiroGuilda(nomeGuilda, nomeAventureiro, idade, classe);
                         sc.nextLine();
                     } catch (AventureiroDuplicadoException | guildaNaoEncontradaException | dbexception e) {
                         System.out.println(e.getMessage());
@@ -105,12 +105,16 @@ public class ProgramMain {
                 case 3 -> {
                     // ── REGISTRAR missão ──
                     System.out.print("Nome da Missao: ");
-                    String missaoNome = sc.nextLine().trim();
+                    String missaoNome = sc.nextLine().trim().toUpperCase();
 
                     System.out.println("Nome da Guilda responsável pela Missão: ");
-                    String guildaNome = sc.nextLine().trim();
+                    String guildaNome = sc.nextLine().trim().toUpperCase();
 
-                    System.out.println("Quantos aventureiros participaram da missão?");
+                    System.out.println("Qual o status atual da missão?");
+                    Arrays.stream(StatusMissao.values()).forEach(System.out::println);
+                    StatusMissao statusMissao = StatusMissao.valueOf(sc.nextLine().trim().toUpperCase());
+
+                    System.out.println("Quantos aventureiros participaram ou vão participar da missão?");
                     try {
                         int quantidadeparti = sc.nextInt();
                         sc.nextLine();
@@ -131,9 +135,9 @@ public class ProgramMain {
                         System.out.println("Dificuldade da missão: (1 a 10)");
                         int dificuldade = sc.nextInt();
                         sc.nextLine();
-                        System.out.println("Resultado da missão (Vitória ou derrota)");
-                        resultadoMissao resultado = resultadoMissao.valueOf(sc.nextLine().toUpperCase());
-                        service.registrarMissao(missaoNome, guildaNome, participantes, dificuldade, resultado);
+//                        System.out.println("Resultado da missão (Vitória ou derrota)");
+//                        resultadoMissao resultado = resultadoMissao.valueOf(sc.nextLine().toUpperCase());
+                        service.registrarMissao(missaoNome, guildaNome, participantes, dificuldade, statusMissao);
                     } catch (AventureiroNaoExiste | GuildavaziaException | guildaNaoEncontradaException | Dificuldadeimcompativel | quantidadeParticipantesErradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {

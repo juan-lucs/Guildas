@@ -1,7 +1,7 @@
 package Service;
 import db.dbexception;
 import enums.Classes;
-import enums.resultadoMissao;
+import enums.StatusMissao;
 import model.Entity.Aventureiro;
 import model.Entity.AvtrMestre;
 import exeption.*;
@@ -64,8 +64,8 @@ public class TorneioService {
         System.out.println("Jogador '" + aven.getNome() + "' adicionado ao Guilda '" + guilda.getNome() + "' com sucesso!");
     }
 
-    // REGISTRAR PARTIDA
-    public void registrarMissao(String nomeMissao, String nomeGuilda, List<String> participantes , int dificuldade, resultadoMissao resultado)
+    // REGISTRAR MISSAO
+    public void registrarMissao(String nomeMissao, String nomeGuilda, List<String> participantes , int dificuldade, StatusMissao resultado)
             throws Dificuldadeimcompativel, guildaNaoEncontradaException, dbexception, GuildavaziaException, AventureiroNaoExiste {
 
         if (dificuldade > 10 || dificuldade < 1) {

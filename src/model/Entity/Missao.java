@@ -1,7 +1,5 @@
 package model.Entity;
 
-import enums.resultadoMissao;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
