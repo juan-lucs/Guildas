@@ -99,7 +99,7 @@ public class TorneioService {
     // RANKING (decrescente)
     public List<Guilda> rankingTorneio() {
         var guildas = guildaDao.findAll();
-        guildas.sort(Comparator.comparing((Guilda g) -> g.getReputacao()).thenComparing(g -> g.getNome()));
+        guildas.sort(Comparator.comparing((Guilda g) -> g.getReputacao()).thenComparing(g -> g.getNome()).reversed());
         return guildas;
     }
 //
