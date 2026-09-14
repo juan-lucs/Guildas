@@ -28,6 +28,8 @@ public class ProgramMain {
             System.out.println("3. Registrar missão");
             System.out.println("4. Ver ranking");
             System.out.println("6. Exportar ranking para arquivo");
+            System.out.println("7. EXIBIR MISSÕES DISPONÍVEIS");
+            System.out.println("8. ADICIONAR MESTRE A UMA GUILDA");
             System.out.println("0. Sair");
             System.out.print("\nEscolha uma opção: ");
 
@@ -107,37 +109,42 @@ public class ProgramMain {
                     System.out.print("Nome da Missao: ");
                     String missaoNome = sc.nextLine().trim().toUpperCase();
 
-                    System.out.println("Nome da Guilda responsável pela Missão: ");
-                    String guildaNome = sc.nextLine().trim().toUpperCase();
 
                     System.out.println("Qual o status atual da missão?");
                     Arrays.stream(StatusMissao.values()).forEach(System.out::println);
                     StatusMissao statusMissao = StatusMissao.valueOf(sc.nextLine().trim().toUpperCase());
-
-                    System.out.println("Quantos aventureiros participaram ou vão participar da missão?");
                     try {
-                        int quantidadeparti = sc.nextInt();
-                        sc.nextLine();
-
-                        var participantes = new ArrayList<String>();
-
-                        if (quantidadeparti > 0) {
-                            while (quantidadeparti > 0 ) {
-                                System.out.println("Digite o nome do aventureiro: ");
-                                participantes.add(sc.nextLine());
-                                quantidadeparti -= 1;
-                            }
-
-                        } else {
-                            throw new quantidadeParticipantesErradaException("Quantidade de participantes inválida!");
-                        }
-
                         System.out.println("Dificuldade da missão: (1 a 10)");
                         int dificuldade = sc.nextInt();
                         sc.nextLine();
+
+                        if (statusMissao.equals(StatusMissao.CONCLUIDA) || statusMissao.equals(StatusMissao.FALHA) || statusMissao.equals(StatusMissao.EM_ANDAMENTO) ) {
+                            System.out.println("Nome da Guilda responsável pela Missão: ");
+                            String guildaNome = sc.nextLine().trim().toUpperCase();
+
+                            System.out.println("Quantos aventureiros participaram ou estão participando da missão?");
+                            int quantidadeparti = sc.nextInt();
+                            sc.nextLine();
+
+                            var participantes = new ArrayList<String>();
+
+                            if (quantidadeparti > 0) {
+                                while (quantidadeparti > 0 ) {
+                                    System.out.println("Digite o nome do aventureiro: ");
+                                    participantes.add(sc.nextLine());
+                                    quantidadeparti -= 1;
+                                }
+                                service.registrarMissao(missaoNome, guildaNome, participantes, dificuldade, statusMissao);
+                            } else {
+                                throw new quantidadeParticipantesErradaException("Quantidade de participantes inválida!");
+                            }
+
+                        } else {
+                            service.registrarMissao(missaoNome, null, null, dificuldade, statusMissao);
+                        }
 //                        System.out.println("Resultado da missão (Vitória ou derrota)");
 //                        resultadoMissao resultado = resultadoMissao.valueOf(sc.nextLine().toUpperCase());
-                        service.registrarMissao(missaoNome, guildaNome, participantes, dificuldade, statusMissao);
+
                     } catch (AventureiroNaoExiste | GuildavaziaException | guildaNaoEncontradaException | Dificuldadeimcompativel | quantidadeParticipantesErradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
@@ -177,7 +184,8 @@ public class ProgramMain {
 //                }
 //
 //
-
+                case 7 -> {}
+                case 8 -> {}
                 case 0 -> {
                     System.out.println("Encerrando o sistema.....");
                     rodando = false;

@@ -2,6 +2,7 @@ package model.dao.impl;
 
 import db.bancodados;
 import db.dbexception;
+import enums.StatusMissao;
 import model.Entity.Missao;
 import model.dao.MissaoDao;
 
@@ -26,14 +27,18 @@ public class MissaoDaoJDBC implements MissaoDao {
 
                 stMissao = conn.prepareStatement(
                         "INSERT INTO missao "
-                               + "(name,dificuldade,guilda_id,resultado) "
+                               + "(name,dificuldade,guilda_id,status) "
                                 + "VALUES "
                         + "(?, ?, ?, ?)",
                         Statement.RETURN_GENERATED_KEYS);
             stMissao.setString(1, arg.getNome());
             stMissao.setInt(2, arg.getDificuldade());
-            stMissao.setLong(3, arg.getGuilda().getId());
-            stMissao.setString(4, String.valueOf(arg.getResultado()));
+            if (arg.getGuilda() == null) {
+                    stMissao.setNull(3, Types.INTEGER);
+            } else {
+                    stMissao.setInt(3, arg.getGuilda().getId());
+            }
+            stMissao.setString(4, String.valueOf(arg.getStatus()));
             int linhasafetadas = stMissao.executeUpdate();
 
             if (linhasafetadas == 0) {
@@ -43,21 +48,21 @@ public class MissaoDaoJDBC implements MissaoDao {
             if (rs.next()) {
              arg.setId(rs.getInt(1));
             }
+            if (!arg.getStatus().equals(StatusMissao.DISPONIVEL)){
+                    // AGORA QUE MISSAO FOI CRIADA E EXISTE UM ID, SE CRIA A TABELA DE PARTICIPANTES DESSA MISSÃO
+                    stParticipante = conn.prepareStatement("INSERT INTO participantesMissao (missao_id, aventureiro_id) " +
+                            "VALUES (?, ?)");
 
-            // AGORA QUE MISSAO FOI CRIADA E EXISTE UM ID, SE CRIA A TABELA DE PARTICIPANTES DESSA MISSÃO
-            stParticipante = conn.prepareStatement("INSERT INTO participantesMissao (missao_id, aventureiro_id) " +
-                    "VALUES (?, ?)");
-
-                for (var av : arg.getParticipantes()) {
-                    stParticipante.setInt(1, arg.getId());
-                    stParticipante.setInt(2, av.getId());
-                    stParticipante.addBatch(); // acumula, não executa ainda
+                    for (var av : arg.getParticipantes()) {
+                        stParticipante.setInt(1, arg.getId());
+                        stParticipante.setInt(2, av.getId());
+                        stParticipante.addBatch(); // acumula, não executa ainda
+                    }
+                    stParticipante.executeBatch();
                 }
-                stParticipante.executeBatch();
-
                 conn.commit();
     }  catch (SQLException e) { // basicamente isso diz que se der um erro, é pra tentar dar roolback
-                try {
+                try { // try do commit
                     conn.rollback(); // desfaz TUDO se der errado — a missão inserida também morre
                 } catch (SQLException rollbackEx) {
                     // o rollback pode falhar, se isso acontecer fudeo de vez já era não há mais volta

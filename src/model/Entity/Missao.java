@@ -1,5 +1,7 @@
 package model.Entity;
 
+import enums.StatusMissao;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
@@ -12,17 +14,23 @@ public class Missao implements Serializable {
     private Map<String, Aventureiro> participantes;
     private Guilda guilda;
 
-    private resultadoMissao resultado;
+    private StatusMissao status;
 
     public Missao() {
     }
 
-    public Missao(String nome, int dificuldade, Map<String, Aventureiro> participantes, Guilda guilda, resultadoMissao resultado) {
+    public Missao(String nome, int dificuldade, Map<String, Aventureiro> participantes, Guilda guilda, StatusMissao status) {
         this.nome = nome;
         this.dificuldade = dificuldade;
         this.participantes = participantes;
         this.guilda = guilda;
-        this.resultado = resultado;
+        this.status = status;
+    }
+
+    public Missao(String nomeMissao, int dificuldade, StatusMissao status) {
+        this.nome = nomeMissao;
+        this.dificuldade = dificuldade;
+        this.status = status;
     }
 
     public int getId() {
@@ -65,12 +73,12 @@ public class Missao implements Serializable {
         this.guilda = guilda;
     }
 
-    public resultadoMissao getResultado() {
-        return resultado;
+    public StatusMissao getStatus() {
+        return status;
     }
 
-    public void setResultado(resultadoMissao resultado) {
-        this.resultado = resultado;
+    public void setStatus(StatusMissao status) {
+        this.status = status;
     }
 
     @Override

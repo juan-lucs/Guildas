@@ -65,36 +65,44 @@ public class TorneioService {
     }
 
     // REGISTRAR MISSAO
-    public void registrarMissao(String nomeMissao, String nomeGuilda, List<String> participantes , int dificuldade, StatusMissao resultado)
+    public void registrarMissao(String nomeMissao, String nomeGuilda, List<String> participantes , int dificuldade, StatusMissao status)
             throws Dificuldadeimcompativel, guildaNaoEncontradaException, dbexception, GuildavaziaException, AventureiroNaoExiste {
 
         if (dificuldade > 10 || dificuldade < 1) {
             throw new Dificuldadeimcompativel("Valor inválido para dificuldade!");
         }
-
-        var guilda = guildaDao.findByNome(nomeGuilda);
-        Map<String, Aventureiro> aventureiros = guildaDao.findAventureirosByGuilda(guilda);
-        guilda.setAventureiros(aventureiros);
-        if (guilda.getAventureiros().isEmpty()) {
-            throw new GuildavaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
-        }
-        Map<String, Aventureiro> aventureirosnaMissao = new HashMap<>();
-        for (var participante : participantes) {
-            if (!aventureiros.containsKey(participante)) {
-                throw new AventureiroNaoExiste("O aventureiro " + participante +" não está na guilda " +guilda.getNome());
-            } else {
-               aventureirosnaMissao.put(participante, aventureiros.get(participante));
+        if (nomeGuilda != null) {
+            var guilda = guildaDao.findByNome(nomeGuilda);
+            calcularReputacaoMissao(guilda, status, dificuldade); // transformei em um HELPER caso a regra de reputação mude
+            guildaDao.updateReputacao(guilda);
+            Map<String, Aventureiro> aventureiros = guildaDao.findAventureirosByGuilda(guilda);
+            guilda.setAventureiros(aventureiros);
+            if (guilda.getAventureiros().isEmpty()) {
+                throw new GuildavaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
             }
-        }
-        if (resultado == resultadoMissao.D || resultado == resultadoMissao.DERROTA) {
-            guilda.setReputacao(guilda.getReputacao() - dificuldade * 100);
+            Map<String, Aventureiro> aventureirosnaMissao = new HashMap<>();
+            for (var participante : participantes) {
+                if (!aventureiros.containsKey(participante)) {
+                    throw new AventureiroNaoExiste("O aventureiro " + participante + " não está na guilda " + guilda.getNome());
+                } else {
+                    aventureirosnaMissao.put(participante, aventureiros.get(participante));
+                }
+            }
+            missaoDao.insert(new Missao(nomeMissao,dificuldade, aventureirosnaMissao, guilda, status));
         } else {
-            guilda.setReputacao(guilda.getReputacao() + dificuldade * 100);
+            missaoDao.insert(new Missao(nomeMissao,dificuldade,status));
         }
-        guildaDao.updateReputacao(guilda);
-        missaoDao.insert(new Missao(nomeMissao,dificuldade, aventureirosnaMissao, guilda, resultado));
         System.out.println("Missão registrada com sucesso!");
     }
+    private static void calcularReputacaoMissao(Guilda guilda, StatusMissao status, int dificuldade) {
+            if (status.equals(status.FALHA)) {
+                guilda.setReputacao(guilda.getReputacao() - dificuldade * 100);
+            }
+            else if (status.equals(status.CONCLUIDA)){
+                guilda.setReputacao(guilda.getReputacao() + dificuldade * 100);
+            }
+    }
+
 
     // RANKING (decrescente)
     public List<Guilda> rankingTorneio() {

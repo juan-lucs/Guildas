@@ -1,5 +1,5 @@
 package enums;
 
 public enum StatusMissao {
-    DISPONIVEL, DISPONÍVEL, EM_ANDAMENTO, CONCLUIDA, FALHA
+    DISPONIVEL, EM_ANDAMENTO, CONCLUIDA, FALHA
 }
