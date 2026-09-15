@@ -6,6 +6,7 @@ import db.dbexception;
 import enums.Classes;
 import enums.StatusMissao;
 import exeption.*;
+import util.Exportador;
 
 
 import java.util.*;
@@ -167,21 +168,18 @@ public class ProgramMain {
                         }
                     }
                 }
-//
-//                case 6 -> {
-//                    // ── EXPORTAR RANKING ──
-//                    var ranking = service.rankingTorneio();
-//                    if (ranking.isEmpty()) {
-//                        System.out.println("Nenhuma missão registrada ainda. Não há ranking para exportar.");
-//                    } else {
-//                        try {
-//                            Exportador.exportarRanking(ranking);
-//                            System.out.println("Ranking exportado para 'ranking.txt' com sucesso!");
-//                        } catch (Exception e) {
-//                            System.out.println("Erro ao exportar: " + e.getMessage());
-//                        }
-//                    }
-//                }
+
+                case 6 -> {
+                    // ── EXPORTAR RANKING ──
+                    var ranking = service.rankingTorneio();
+                        try {
+                            Exportador.exportarRanking(ranking);
+                            System.out.println("Ranking exportado para 'ranking.txt' com sucesso!");
+                        } catch (ErroNaExportacao e) {
+                            System.out.println("Erro ao exportar: " + e.getMessage());
+                        }
+                    }
+
 //
 //
                 case 7 -> {}
@@ -194,7 +192,7 @@ public class ProgramMain {
                 default -> System.out.println("Opção inválida. Tente novamente.");
             }
             } catch (Exception e) {
-                System.out.println(e);
+                System.out.println(e.getMessage());
             }
         }
 

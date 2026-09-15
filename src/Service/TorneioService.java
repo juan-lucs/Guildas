@@ -105,17 +105,13 @@ public class TorneioService {
 
 
     // RANKING (decrescente)
-    public List<Guilda> rankingTorneio() {
+    public List<Guilda> rankingTorneio() throws SemGuildasExcpetion {
         var guildas = guildaDao.findAll();
+        if (guildas.isEmpty()) {
+            throw new SemGuildasExcpetion("Nenhum Guilda cadastrado ainda");
+        }
         guildas.sort(Comparator.comparing((Guilda g) -> g.getReputacao()).thenComparing(g -> g.getNome()).reversed());
         return guildas;
     }
-//
-//    // RESUMO DO TORNEIO
-//    public void resumoTorneio() {
-//        System.out.println("\n=== RESUMO DO TORNEIO ===");
-//        System.out.println("Guildas participando: " + repositorio.tamanho());
-//        System.out.println("Partidas jogadas:   " + partidas.size());
-//    }
 
 }
