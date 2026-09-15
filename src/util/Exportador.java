@@ -1,7 +1,7 @@
 package util;
 
 import exeption.ErroNaExportacao;
-import exeption.ErroNaExportação;
+
 import model.Entity.Guilda;
 
 import java.io.BufferedWriter;
