@@ -1,10 +1,10 @@
 package model.dao.impl;
 
-import db.bancodados;
-import db.dbexception;
+import db.BancoDados;
+import db.DbException;
 import enums.Classes;
-import model.Entity.Aventureiro;
-import model.Entity.Guilda;
+import model.entity.Aventureiro;
+import model.entity.Guilda;
 import model.dao.AventureiroDao;
 
 import java.sql.*;
@@ -29,26 +29,26 @@ public class AventureiroDaoJDBC implements AventureiroDao {
                     + "(?,?,?,?)",
                     st.RETURN_GENERATED_KEYS);
             st.setString(1, arg.getNome());
-            st.setInt(2, arg.getnivel());
-            st.setString(3, String.valueOf(arg.getclasse()));
+            st.setInt(2, arg.getNivel());
+            st.setString(3, String.valueOf(arg.getClasse()));
             st.setLong(4, arg.getGuilda().getId());
 
-            int linhasafetadas = st.executeUpdate();
+            int linhasAfetadas = st.executeUpdate();
 
-            if (linhasafetadas > 0) {
+            if (linhasAfetadas > 0) {
                 ResultSet rs = st.getGeneratedKeys();
                     if (rs.next()) {
                         arg.setId(rs.getInt(1 ));
                     }
-                bancodados.closeResultSet(rs);
+                BancoDados.closeResultSet(rs);
                 }   else {
-                throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
+                throw new DbException("ERRO, NENHUMA LINHA ALTERADA");
 
             }
         } catch (SQLException e ) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
+            BancoDados.closeStatement(st);
         }
     }
 
@@ -62,17 +62,17 @@ public class AventureiroDaoJDBC implements AventureiroDao {
                             + "WHERE Id = ?");
 
             st.setString(1, arg.getNome());
-            st.setInt(2, arg.getnivel());
-            st.setString(3, String.valueOf(arg.getclasse()));
+            st.setInt(2, arg.getNivel());
+            st.setString(3, String.valueOf(arg.getClasse()));
             st.setLong(4, arg.getGuilda().getId());
             st.setLong(5, arg.getId());
             st.executeUpdate();
         }
         catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         }
         finally {
-            bancodados.closeStatement(st);
+            BancoDados.closeStatement(st);
         }
     }
 
@@ -96,42 +96,21 @@ public class AventureiroDaoJDBC implements AventureiroDao {
             while(rs.next()) {
                 Aventureiro arg = new Aventureiro();
                 arg.setNome(rs.getString("name"));
-                arg.setnivel(rs.getInt("nivel"));
-                arg.setclasse(Classes.valueOf(rs.getString("classe")));
+                arg.setNivel(rs.getInt("nivel"));
+                arg.setClasse(Classes.valueOf(rs.getString("classe")));
                 arg.setGuilda(guilda);
                 list.add(arg);
             }
             return list;
         }
         catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
-            bancodados.closeResultSet(rs);
+            BancoDados.closeStatement(st);
+            BancoDados.closeResultSet(rs);
         }
 
     }
 
-//    @Override
-//    public void adicionarAGuilda(Aventureiro aventureiro, Guilda guilda) {
-//
-//        PreparedStatement st = null;
-//
-//        try {
-//            st = conn.prepareStatement(
-//                    "UPDATE aventureiro SET guilda_id = ? WHERE id = ?"
-//            );
-//
-//            st.setLong(1, guilda.getId());
-//            st.setLong(2, aventureiro.getId());
-//
-//            st.executeUpdate();
-//
-//        } catch (SQLException e) {
-//            throw new dbexception(e.getMessage());
-//        } finally {
-//            bancodados.closeStatement(st);
-//        }
-//    }
 
 }

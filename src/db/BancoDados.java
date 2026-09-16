@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
-public class bancodados {
+public class BancoDados {
 
     private static Connection conn =  null;
 
@@ -18,7 +18,7 @@ public class bancodados {
                 conn = DriverManager.getConnection(url, props);
             }
             catch (SQLException e) {
-                throw new dbexception(e.getMessage());
+                throw new DbException(e.getMessage());
             }
         }
         return conn;
@@ -30,7 +30,7 @@ public class bancodados {
             props.load(fs); //basicamente o objeto props pede para o FS ler os arquivos (de db.properties), e depois o props interpreta isso como propriedades do banco (.load). assim o pros não fica mais vazio e tem todas as propriedades.
             return props;
         } catch (IOException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } // quando o bloco TRY termina, o FS é imediamente fechado com FS.CLOSE()
     }
 
@@ -40,7 +40,7 @@ public class bancodados {
                 conn.close();
             }
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         }
     }
 
@@ -50,7 +50,7 @@ public class bancodados {
                 rs.close();
             }
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         }
     }
 
@@ -60,7 +60,7 @@ public class bancodados {
                 st.close();
             }
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         }
     }
 

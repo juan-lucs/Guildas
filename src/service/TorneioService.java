@@ -1,12 +1,12 @@
-package Service;
-import db.dbexception;
+package service;
+import db.DbException;
 import enums.Classes;
 import enums.StatusMissao;
-import model.Entity.Aventureiro;
-import model.Entity.AvtrMestre;
-import exeption.*;
-import model.Entity.Guilda;
-import model.Entity.Missao;
+import model.entity.Aventureiro;
+import model.entity.AventureiroMestre;
+import exception.*;
+import model.entity.Guilda;
+import model.entity.Missao;
 import model.dao.AventureiroDao;
 import model.dao.DaoFactory;
 import model.dao.GuildaDao;
@@ -16,21 +16,17 @@ import java.util.*;
 
 public class TorneioService {
 
-    final AventureiroDao avntDao = DaoFactory.createAventureiroDao();
+    final AventureiroDao aventureiroDao = DaoFactory.createAventureiroDao();
     final GuildaDao guildaDao = DaoFactory.createGuildaDao();
     final MissaoDao missaoDao = DaoFactory.createMissaoDao();
 
-//    private Map<Guilda, Integer> pontosDeCadaGuilda = new HashMap<>();
-    //private final Repositorio<Guilda> repositorio = new Repositorio<>();
-    //private Set<Partida> partidas = new HashSet<>();
-//    private StatusTorneio status = StatusTorneio.ABERTO;
 
     // CADASTRAR Guilda
-    public void cadastrarGuilda(String nomeGuilda, int level) throws GuildaDuplicadoException, dbexception{
+    public void cadastrarGuilda(String nomeGuilda, int level) throws GuildaDuplicadoException, DbException{
 
-        List<String> Guildas = guildaDao.findAllNomes();
-        for (String Guilda : Guildas) {
-            if (Guilda.equalsIgnoreCase(nomeGuilda)) {
+        List<String> nomesGuildas = guildaDao.findAllNomes();
+        for (String nomeExistente : nomesGuildas) {
+            if (nomeExistente.equalsIgnoreCase(nomeGuilda)) {
                 throw new GuildaDuplicadoException("Já existe um Guilda com o nome '" + nomeGuilda + "'!");
             }
         }
@@ -39,37 +35,37 @@ public class TorneioService {
         System.out.println("Guilda '" + nomeGuilda + "' cadastrada com sucesso!");
     }
 
-    public void criarMestreGuilda(String n, int nivel, Classes classe, String nomeGuilda) throws NivelMinimoMestreException, guildaNaoEncontradaException {
+    public void criarMestreGuilda(String nomeMestre, int nivel, Classes classe, String nomeGuilda) throws NivelMinimoMestreException, GuildaNaoEncontradaException {
         final int minimoDeNivel = 50;
         if (nivel < minimoDeNivel) {
             throw new NivelMinimoMestreException("O mestre deve possuir nível 50 ou maior");
         }
         var guilda = guildaDao.findByNome(nomeGuilda);
-        var aven = new AvtrMestre(n, nivel, classe, guilda);
-        avntDao.insert(aven); guilda.setMestre(aven);
+        var aven = new AventureiroMestre(nomeMestre, nivel, classe, guilda);
+        aventureiroDao.insert(aven); guilda.setMestre(aven);
         guildaDao.update(guilda);
         System.out.println("Mestre cadastrado com sucesso");
     }
 
     // ADICIONAR Aventureiro A Guilda
-    public void adicionarAventureiroGuilda(String nomeGuilda, String nomej , int nivel, Classes classe) throws AventureiroDuplicadoException, dbexception, guildaNaoEncontradaException, AventureiroDuplicadoException {
+    public void adicionarAventureiroGuilda(String nomeGuilda, String nomeAventureiro, int nivel, Classes classe) throws AventureiroDuplicadoException, DbException, GuildaNaoEncontradaException {
         Guilda guilda = guildaDao.findByNome(nomeGuilda); // Se não existir ele vai passar reto com o exception
-        var aven = new Aventureiro(nomej,nivel, classe);
+        var aven = new Aventureiro(nomeAventureiro, nivel, classe);
         if (guildaDao.pesquisarAventureiro(guilda, aven.getNome())) {
             throw new AventureiroDuplicadoException("Aventureiro já está na guilda!");
         } else {
             aven.setGuilda(guilda);
         }
-        avntDao.insert(aven);
+        aventureiroDao.insert(aven);
         System.out.println("Jogador '" + aven.getNome() + "' adicionado ao Guilda '" + guilda.getNome() + "' com sucesso!");
     }
 
     // REGISTRAR MISSAO
     public void registrarMissao(String nomeMissao, String nomeGuilda, List<String> participantes , int dificuldade, StatusMissao status)
-            throws Dificuldadeimcompativel, guildaNaoEncontradaException, dbexception, GuildavaziaException, AventureiroNaoExiste {
+            throws DificuldadeIncompativelException, GuildaNaoEncontradaException, DbException, GuildaVaziaException, AventureiroNaoExisteException {
 
         if (dificuldade > 10 || dificuldade < 1) {
-            throw new Dificuldadeimcompativel("Valor inválido para dificuldade!");
+            throw new DificuldadeIncompativelException("Valor inválido para dificuldade!");
         }
         if (nomeGuilda != null) {
             var guilda = guildaDao.findByNome(nomeGuilda);
@@ -78,17 +74,17 @@ public class TorneioService {
             Map<String, Aventureiro> aventureiros = guildaDao.findAventureirosByGuilda(guilda);
             guilda.setAventureiros(aventureiros);
             if (guilda.getAventureiros().isEmpty()) {
-                throw new GuildavaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
+                throw new GuildaVaziaException("O Guilda '" + guilda.getNome() + "' não tem jogadores cadastrados!");
             }
-            Map<String, Aventureiro> aventureirosnaMissao = new HashMap<>();
+            Map<String, Aventureiro> aventureirosNaMissao = new HashMap<>();
             for (var participante : participantes) {
                 if (!aventureiros.containsKey(participante)) {
-                    throw new AventureiroNaoExiste("O aventureiro " + participante + " não está na guilda " + guilda.getNome());
+                    throw new AventureiroNaoExisteException("O aventureiro " + participante + " não está na guilda " + guilda.getNome());
                 } else {
-                    aventureirosnaMissao.put(participante, aventureiros.get(participante));
+                    aventureirosNaMissao.put(participante, aventureiros.get(participante));
                 }
             }
-            missaoDao.insert(new Missao(nomeMissao,dificuldade, aventureirosnaMissao, guilda, status));
+            missaoDao.insert(new Missao(nomeMissao,dificuldade, aventureirosNaMissao, guilda, status));
         } else {
             missaoDao.insert(new Missao(nomeMissao,dificuldade,status));
         }
@@ -105,10 +101,10 @@ public class TorneioService {
 
 
     // RANKING (decrescente)
-    public List<Guilda> rankingTorneio() throws SemGuildasExcpetion {
+    public List<Guilda> rankingTorneio() throws SemGuildasException {
         var guildas = guildaDao.findAll();
         if (guildas.isEmpty()) {
-            throw new SemGuildasExcpetion("Nenhum Guilda cadastrado ainda");
+            throw new SemGuildasException("Nenhum Guilda cadastrado ainda");
         }
         guildas.sort(Comparator.comparing((Guilda g) -> g.getReputacao()).thenComparing(g -> g.getNome()).reversed());
         return guildas;

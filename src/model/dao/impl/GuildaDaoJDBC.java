@@ -1,11 +1,11 @@
 package model.dao.impl;
 
-import db.bancodados;
-import db.dbexception;
+import db.BancoDados;
+import db.DbException;
 import enums.Classes;
-import exeption.guildaNaoEncontradaException;
-import model.Entity.Aventureiro;
-import model.Entity.Guilda;
+import exception.GuildaNaoEncontradaException;
+import model.entity.Aventureiro;
+import model.entity.Guilda;
 import model.dao.GuildaDao;
 
 import java.sql.*;
@@ -34,14 +34,14 @@ public class GuildaDaoJDBC implements GuildaDao {
             st.setInt(2, arg.getLevel());
             // reputacao é DEFAULT = 0
 
-            int linhasafetadas = st.executeUpdate();
-            if (linhasafetadas < 0) {
-                throw new dbexception("Nenhuma linha alterada");
+            int linhasAfetadas = st.executeUpdate();
+            if (linhasAfetadas < 0) {
+                throw new DbException("Nenhuma linha alterada");
             }
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
+            BancoDados.closeStatement(st);
         }
     }
 
@@ -60,12 +60,12 @@ public class GuildaDaoJDBC implements GuildaDao {
             st.setLong(4, arg.getId());
             int linhas = st.executeUpdate();
             if (linhas == 0) {
-                throw new dbexception("Nenhuma guilda foi atualizada.");
+                throw new DbException("Nenhuma guilda foi atualizada.");
             }
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
+            BancoDados.closeStatement(st);
         }
     }
 
@@ -83,14 +83,14 @@ public class GuildaDaoJDBC implements GuildaDao {
             st.setLong(2, arg.getId());
             st.executeUpdate();
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
+            BancoDados.closeStatement(st);
         }
     }
 
     @Override
-    public Guilda findByNome(String nome) throws guildaNaoEncontradaException {
+    public Guilda findByNome(String nome) throws GuildaNaoEncontradaException {
         PreparedStatement st = null;
         ResultSet rs = null;
         try {
@@ -108,14 +108,14 @@ public class GuildaDaoJDBC implements GuildaDao {
                 guilda.setId(rs.getInt("id"));
                 guilda.setNome(rs.getString("name"));
             } else {
-                throw new guildaNaoEncontradaException("guilda nao encontrada");
+                throw new GuildaNaoEncontradaException("guilda nao encontrada");
             }
             return guilda;
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
-            bancodados.closeResultSet(rs);
+            BancoDados.closeStatement(st);
+            BancoDados.closeResultSet(rs);
         }
     }
 
@@ -140,10 +140,10 @@ public class GuildaDaoJDBC implements GuildaDao {
             }
             return map;
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
-            bancodados.closeResultSet(rs);
+            BancoDados.closeStatement(st);
+            BancoDados.closeResultSet(rs);
         }
     }
     @Override
@@ -160,10 +160,10 @@ public class GuildaDaoJDBC implements GuildaDao {
             }
             return guildas;
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
-            bancodados.closeResultSet(rs);
+            BancoDados.closeStatement(st);
+            BancoDados.closeResultSet(rs);
         }
     }
 
@@ -182,10 +182,10 @@ public class GuildaDaoJDBC implements GuildaDao {
             return rs.next();
 
         } catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
-            bancodados.closeResultSet(rs);
+            BancoDados.closeStatement(st);
+            BancoDados.closeResultSet(rs);
         }
     }
     @Override
@@ -195,18 +195,18 @@ public class GuildaDaoJDBC implements GuildaDao {
         try {
             st = conn.createStatement();
             rs = st.executeQuery("SELECT name FROM guilda");
-            List<String> nomeguildas = new ArrayList<>();
+            List<String> nomesGuildas = new ArrayList<>();
 
             while(rs.next()) {
-                nomeguildas.add(rs.getString(1));
+                nomesGuildas.add(rs.getString(1));
                 }
-            return nomeguildas;
+            return nomesGuildas;
         }
         catch (SQLException e) {
-            throw new dbexception(e.getMessage());
+            throw new DbException(e.getMessage());
         } finally {
-            bancodados.closeStatement(st);
-            bancodados.closeResultSet(rs);
+            BancoDados.closeStatement(st);
+            BancoDados.closeResultSet(rs);
         }
     }
 

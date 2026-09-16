@@ -27,19 +27,21 @@ O desempenho nas missões concederá **reputação**, utilizada para determinar 
 * Criação de um mestre para a guilda (aventureiro com nível mínimo de 50)
 * Cadastro de aventureiros e associação a uma guilda existente
 * Prevenção de guildas e aventureiros duplicados
-* Registro de missões, com participantes, dificuldade (1 a 10) e resultado (vitória/derrota)
-* Atualização automática da reputação da guilda após cada missão
-* Visualização do ranking de guildas por reputação
+* Registro de missões, com participantes, dificuldade (1 a 10) e um status (`DISPONIVEL`, `EM_ANDAMENTO`, `CONCLUIDA`, `FALHA`)
+* Atualização automática da reputação da guilda quando a missão é `CONCLUIDA` ou `FALHA`
+* Visualização do ranking de guildas por reputação (da maior para a menor)
+* Exportação do ranking para um arquivo (`ranking.txt`)
 * Persistência dos dados utilizando MySQL + JDBC, com transações e rollback no registro de missões
 * Tratamento de erros através de exceções personalizadas para cada regra de negócio
 
 ## Ainda não implementado
 
 * Remoção de aventureiros
-* Exportação do ranking para arquivo (existe um rascunho pronto no código, comentado, mas ainda não está funcional)
-* Cálculo automático do resultado da missão a partir do nível dos aventureiros (hoje o resultado é digitado manualmente por quem está usando o sistema)
+* Exibir missões disponíveis (opção 7 do menu já existe, mas ainda não faz nada)
+* Adicionar mestre a uma guilda já existente (opção 8 do menu já existe, mas ainda não faz nada — hoje só dá pra definir o mestre no momento em que a guilda é criada)
+* Cálculo automático do resultado da missão a partir do nível dos aventureiros (hoje o status da missão é escolhido manualmente por quem está usando o sistema)
 * Sistema de ranks nomeados (Bronze, Prata, Ouro...) — o ranking hoje mostra só o número da reputação
-* Controle de status da missão (impedir que a mesma missão seja concluída duas vezes)
+* Transição de status de uma missão já existente (hoje o status é definido no momento em que a missão é registrada; ainda não dá pra "pegar" uma missão `EM_ANDAMENTO` e depois marcá-la como `CONCLUIDA`)
 
 ---
 
@@ -121,11 +123,11 @@ Inicialmente, o nível dos aventureiros será o principal fator utilizado no cá
 
 O sucesso ou fracasso de uma missão será determinado pelos dados da equipe e pelos requisitos da missão, evitando que o resultado dependa apenas de aleatoriedade.
 
-Hoje o resultado (vitória ou derrota) é digitado manualmente por quem está usando o sistema ao registrar a missão, e não calculado a partir da equipe.
+Hoje o status da missão (`CONCLUIDA`, `FALHA`, `EM_ANDAMENTO` ou `DISPONIVEL`) é escolhido manualmente por quem está usando o sistema ao registrar a missão, e não calculado a partir da equipe.
 
 **RN13 — Missão concluída** ⏳ *Planejado*
 
-Uma missão já concluída não poderá ser concluída novamente. Hoje não existe um controle de status que impeça isso.
+Uma missão já concluída não poderá ser concluída novamente. Hoje já existe um campo de status na missão, mas cada registro é sempre uma missão nova — ainda não existe uma forma de retomar uma missão já existente e mudar o status dela (por exemplo, de `EM_ANDAMENTO` para `CONCLUIDA`), então essa trava ainda não se aplica.
 
 ---
 
@@ -133,7 +135,7 @@ Uma missão já concluída não poderá ser concluída novamente. Hoje não exis
 
 **RN14 — Reputação** ✅ *Implementado*
 
-Guildas receberão reputação pela conclusão bem-sucedida de missões. Hoje o valor é a dificuldade da missão multiplicada por 100, somado em caso de vitória e subtraído em caso de derrota.
+Guildas receberão reputação pela conclusão bem-sucedida de missões. Hoje o valor é a dificuldade da missão multiplicada por 100, somado quando o status é `CONCLUIDA` e subtraído quando é `FALHA`.
 
 **RN15 — Reputação não negativa** ⏳ *Planejado*
 
@@ -211,9 +213,9 @@ O desenvolvimento está dividido em etapas para que novas funcionalidades sejam 
 * [x] Dificuldade da missão
 * [x] Recompensa em reputação
 * [x] Atualização da reputação após uma missão
-* [ ] Status da missão
+* [x] Status da missão (`DISPONIVEL`, `EM_ANDAMENTO`, `CONCLUIDA`, `FALHA`) — definido na hora de registrar a missão, ainda não é possível mudar depois
 * [ ] Cálculo de força a partir do nível dos aventureiros
-* [ ] Determinação automática de sucesso ou fracasso (hoje o resultado é digitado manualmente)
+* [ ] Determinação automática de sucesso ou fracasso (hoje o status é escolhido manualmente)
 
 ---
 
@@ -261,7 +263,7 @@ participantesMissao
 * [x] Utilização de transações JDBC
 * [x] Atualização da reputação da guilda
 * [x] Rollback em caso de falha
-* [ ] Atualização do status da missão
+* [ ] Atualização do status de uma missão já existente (transição entre estados, ex: `EM_ANDAMENTO` → `CONCLUIDA`)
 * [ ] Testes das principais regras de negócio
 
 Uma conclusão de missão deverá ser tratada como uma única operação:
@@ -365,7 +367,7 @@ src/
 │   └── Repositorio.java   (não utilizado atualmente — código comentado)
 │
 └── util/
-    └── Exportador.java    (não utilizado atualmente — código comentado)
+    └── Exportador.java    (exporta o ranking para 'ranking.txt')
 ```
 
 > A estrutura poderá ser alterada durante o desenvolvimento conforme novas responsabilidades forem adicionadas ao sistema.
@@ -402,7 +404,7 @@ MISSAO
 ├── name
 ├── dificuldade
 ├── guilda_id
-└── resultado
+└── status
 ```
 
 A relação entre aventureiros e missões já existe, através de uma tabela associativa:

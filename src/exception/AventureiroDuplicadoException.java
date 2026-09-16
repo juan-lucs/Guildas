@@ -1,4 +1,4 @@
-package exeption;
+package exception;
 
 public class AventureiroDuplicadoException extends Exception {
     public AventureiroDuplicadoException(String mensagem) {

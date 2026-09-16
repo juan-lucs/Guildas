@@ -1,11 +1,11 @@
-package Main;
+package main;
 
-import Service.*;
+import service.*;
 
-import db.dbexception;
+import db.DbException;
 import enums.Classes;
 import enums.StatusMissao;
-import exeption.*;
+import exception.*;
 import util.Exportador;
 
 
@@ -57,7 +57,7 @@ public class ProgramMain {
                         System.out.println("Sua Guilda terá um Aventureiro mestre? y/n");
                         String escolha = sc.nextLine().toUpperCase();
 
-                        if (!escolha.equalsIgnoreCase("Y") && !escolha.equalsIgnoreCase("N")) {throw new EscolhaerradaException("Escolha incorreta!");}
+                        if (!escolha.equalsIgnoreCase("Y") && !escolha.equalsIgnoreCase("N")) {throw new EscolhaErradaException("Escolha incorreta!");}
                         else if (escolha.equalsIgnoreCase("Y")) {
 
                             System.out.print("Nome do Aventureiro: ");
@@ -71,7 +71,7 @@ public class ProgramMain {
                             Classes classe = Classes.valueOf(sc.nextLine().trim().toUpperCase());
                             service.criarMestreGuilda(nomeAventureiro, nivel, classe, nomeGuilda);
                         }
-                    } catch (NivelMinimoMestreException | GuildaDuplicadoException | dbexception | EscolhaerradaException | guildaNaoEncontradaException e) {
+                    } catch (NivelMinimoMestreException | GuildaDuplicadoException | DbException | EscolhaErradaException | GuildaNaoEncontradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Level invalido!");
@@ -93,13 +93,13 @@ public class ProgramMain {
                         System.out.print("Classe do Aventureiro: ");
                         Classes classe = Classes.valueOf(sc.nextLine().trim().toUpperCase());
                         System.out.print("Nivel do Aventureiro: ");
-                        int idade = sc.nextInt();
-                        service.adicionarAventureiroGuilda(nomeGuilda, nomeAventureiro, idade, classe);
+                        int nivel = sc.nextInt();
+                        service.adicionarAventureiroGuilda(nomeGuilda, nomeAventureiro, nivel, classe);
                         sc.nextLine();
-                    } catch (AventureiroDuplicadoException | guildaNaoEncontradaException | dbexception e) {
+                    } catch (AventureiroDuplicadoException | GuildaNaoEncontradaException | DbException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
-                        System.out.println("Idade inválida!");
+                        System.out.println("Nível inválido!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("Escolha uma classe certa!");
                     }
@@ -124,20 +124,20 @@ public class ProgramMain {
                             String guildaNome = sc.nextLine().trim().toUpperCase();
 
                             System.out.println("Quantos aventureiros participaram ou estão participando da missão?");
-                            int quantidadeparti = sc.nextInt();
+                            int quantidadeParticipantes = sc.nextInt();
                             sc.nextLine();
 
                             var participantes = new ArrayList<String>();
 
-                            if (quantidadeparti > 0) {
-                                while (quantidadeparti > 0 ) {
+                            if (quantidadeParticipantes > 0) {
+                                while (quantidadeParticipantes > 0 ) {
                                     System.out.println("Digite o nome do aventureiro: ");
                                     participantes.add(sc.nextLine());
-                                    quantidadeparti -= 1;
+                                    quantidadeParticipantes -= 1;
                                 }
                                 service.registrarMissao(missaoNome, guildaNome, participantes, dificuldade, statusMissao);
                             } else {
-                                throw new quantidadeParticipantesErradaException("Quantidade de participantes inválida!");
+                                throw new QuantidadeParticipantesErradaException("Quantidade de participantes inválida!");
                             }
 
                         } else {
@@ -146,7 +146,7 @@ public class ProgramMain {
 //                        System.out.println("Resultado da missão (Vitória ou derrota)");
 //                        resultadoMissao resultado = resultadoMissao.valueOf(sc.nextLine().toUpperCase());
 
-                    } catch (AventureiroNaoExiste | GuildavaziaException | guildaNaoEncontradaException | Dificuldadeimcompativel | quantidadeParticipantesErradaException e) {
+                    } catch (AventureiroNaoExisteException | GuildaVaziaException | GuildaNaoEncontradaException | DificuldadeIncompativelException | QuantidadeParticipantesErradaException e) {
                         System.out.println(e.getMessage());
                     } catch (InputMismatchException e) {
                         System.out.println("Valor inválido!");
@@ -175,7 +175,7 @@ public class ProgramMain {
                         try {
                             Exportador.exportarRanking(ranking);
                             System.out.println("Ranking exportado para 'ranking.txt' com sucesso!");
-                        } catch (ErroNaExportacao e) {
+                        } catch (ErroNaExportacaoException e) {
                             System.out.println("Erro ao exportar: " + e.getMessage());
                         }
                     }

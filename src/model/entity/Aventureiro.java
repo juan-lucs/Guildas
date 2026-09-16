@@ -1,4 +1,4 @@
-package model.Entity;
+package model.entity;
 
 import enums.Classes;
 
@@ -36,7 +36,7 @@ public class Aventureiro implements Comparable<Aventureiro>, Serializable {
 //        this.guilda = guilda;
     }
 
-    public Classes getclasse() {
+    public Classes getClasse() {
         return classe;
     }
 
@@ -56,7 +56,7 @@ public class Aventureiro implements Comparable<Aventureiro>, Serializable {
         this.guilda = guilda;
     }
 
-    public void setclasse(Classes classe) {
+    public void setClasse(Classes classe) {
         this.classe = classe;
     }
 
@@ -68,11 +68,11 @@ public class Aventureiro implements Comparable<Aventureiro>, Serializable {
         this.nome = nome;
     }
 
-    public int getnivel() {
+    public int getNivel() {
         return nivel;
     }
 
-    public void setnivel(int nivel) {
+    public void setNivel(int nivel) {
         this.nivel = nivel;
     }
 

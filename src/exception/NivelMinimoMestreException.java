@@ -1,4 +1,4 @@
-package exeption;
+package exception;
 
 public class NivelMinimoMestreException extends Exception {
     public NivelMinimoMestreException(String mensagem) {

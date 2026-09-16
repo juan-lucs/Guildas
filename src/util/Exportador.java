@@ -1,8 +1,8 @@
 package util;
 
-import exeption.ErroNaExportacao;
+import exception.ErroNaExportacaoException;
 
-import model.Entity.Guilda;
+import model.entity.Guilda;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Exportador {
 
-    public static void exportarRanking(List<Guilda> ranking) throws ErroNaExportacao {
+    public static void exportarRanking(List<Guilda> ranking) throws ErroNaExportacaoException {
         // FileWriter abre/cria o arquivo
         // BufferedWriter envolve o FileWriter para escrever com eficiência
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("ranking.txt"))) {
@@ -39,7 +39,7 @@ public class Exportador {
             bw.write("Total dse times: " + ranking.size());
          // try-with-resources fecha o BufferedWriter automaticamente, mesmo se der erro
         } catch (IOException e) {
-            throw new ErroNaExportacao(e.getMessage());
+            throw new ErroNaExportacaoException(e.getMessage());
      }
     }
 }

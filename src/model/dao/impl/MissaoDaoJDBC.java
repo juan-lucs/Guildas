@@ -1,9 +1,9 @@
 package model.dao.impl;
 
-import db.bancodados;
-import db.dbexception;
+import db.BancoDados;
+import db.DbException;
 import enums.StatusMissao;
-import model.Entity.Missao;
+import model.entity.Missao;
 import model.dao.MissaoDao;
 
 import java.sql.*;
@@ -39,10 +39,10 @@ public class MissaoDaoJDBC implements MissaoDao {
                     stMissao.setInt(3, arg.getGuilda().getId());
             }
             stMissao.setString(4, String.valueOf(arg.getStatus()));
-            int linhasafetadas = stMissao.executeUpdate();
+            int linhasAfetadas = stMissao.executeUpdate();
 
-            if (linhasafetadas == 0) {
-             throw new dbexception("ERRO, NENHUMA LINHA ALTERADA");
+            if (linhasAfetadas == 0) {
+             throw new DbException("ERRO, NENHUMA LINHA ALTERADA");
             }
             rs = stMissao.getGeneratedKeys();
             if (rs.next()) {
@@ -66,9 +66,9 @@ public class MissaoDaoJDBC implements MissaoDao {
                     conn.rollback(); // desfaz TUDO se der errado — a missão inserida também morre
                 } catch (SQLException rollbackEx) {
                     // o rollback pode falhar, se isso acontecer fudeo de vez já era não há mais volta
-                    throw new dbexception("Falha no rollback: " + rollbackEx.getMessage());
+                    throw new DbException("Falha no rollback: " + rollbackEx.getMessage());
                 }
-                throw new dbexception(e.getMessage()); // isso daqui faz parte do catch ali de cima
+                throw new DbException(e.getMessage()); // isso daqui faz parte do catch ali de cima
                                                     // que está pegando o primeiro SQLException
 
             } finally {
@@ -77,11 +77,11 @@ public class MissaoDaoJDBC implements MissaoDao {
                 try {
                     conn.setAutoCommit(true);
                 } catch (SQLException e) { // Existe caso o conn esteja fechado, aí vai lançar uma exception
-                    throw new dbexception(e.getMessage());
+                    throw new DbException(e.getMessage());
                 }
-                bancodados.closeResultSet(rs);
-                bancodados.closeStatement(stMissao);
-                bancodados.closeStatement(stParticipante);
+                BancoDados.closeResultSet(rs);
+                BancoDados.closeStatement(stMissao);
+                BancoDados.closeStatement(stParticipante);
             }
     }
 
@@ -112,10 +112,10 @@ public class MissaoDaoJDBC implements MissaoDao {
 //            }
 //            return list;
 //        } catch (SQLException e) {
-//            throw new dbexception(e.getMessage());
+//            throw new DbException(e.getMessage());
 //        } finally {
-//            bancodados.closeStatement(st);
-//            bancodados.closeResultSet(rs);
+//            BancoDados.closeStatement(st);
+//            BancoDados.closeResultSet(rs);
 //        }
         return null;
     }

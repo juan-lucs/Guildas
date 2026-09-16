@@ -1,7 +1,7 @@
 package model.dao;
 
-import model.Entity.Aventureiro;
-import model.Entity.Guilda;
+import model.entity.Aventureiro;
+import model.entity.Guilda;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface AventureiroDao {
     Aventureiro findById(Integer id);
 
     List<Aventureiro> findAllOnAGuilda(Guilda guilda);
-//    void adicionarAGuilda(Aventureiro Aventureiro, Guilda guilda);
+
 }
 
 

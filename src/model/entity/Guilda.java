@@ -1,4 +1,4 @@
-package model.Entity;
+package model.entity;
 
 import java.io.Serializable;
 import java.util.*;
@@ -7,7 +7,7 @@ public class Guilda implements Serializable {
     private int id;
     private String nome;
     private int level;
-    private AvtrMestre mestre;
+    private AventureiroMestre mestre;
     private int reputacao;
     private Map<String, Aventureiro> aventureiros = new HashMap<>();
 
@@ -56,11 +56,11 @@ public class Guilda implements Serializable {
         this.nome = nome;
     }
 
-    public AvtrMestre getMestre() {
+    public AventureiroMestre getMestre() {
         return mestre;
     }
 
-    public void setMestre(AvtrMestre mestre) {
+    public void setMestre(AventureiroMestre mestre) {
         this.mestre = mestre;
     }
 
