@@ -1,0 +1,6 @@
+docker run --name guildas-mysql \
+  -e MYSQL_ROOT_PASSWORD=root \
+  -e MYSQL_DATABASE=guildas \
+  -p 3306:3306 \
+  -d mysql:8.0
+
