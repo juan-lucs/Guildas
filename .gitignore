@@ -22,6 +22,4 @@ Thumbs.db
 *.tmp
 *.temp
 
-src/db.properties
-coisas.txt
 ranking.txt

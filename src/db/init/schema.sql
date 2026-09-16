@@ -1,13 +1,3 @@
-docker run --name guildas-mysql \
-  -e MYSQL_ROOT_PASSWORD=root \
-  -e MYSQL_DATABASE=guildas \
-  -p 3306:3306 \
-  -d mysql:8.0
-
-dburl=jdbc:mysql://localhost:3306/guildas
-user=root
-password=root
-
 create table aventureiro
 (
     id        int auto_increment
@@ -64,4 +54,3 @@ create index aventureiro_id
 
 create index missao_id
     on participantesMissao (missao_id);
-
